@@ -1,0 +1,53 @@
+Final Project:
+	desc: An e-commerce app to order groceries from 100 items
+	modules:
+		user_module:
+			Pre-login browsing
+			register module
+			login module
+			index: Discovery: List, search, sort(high to low/ low-to-high), filter(category, price ranges)
+			Product page: Product details, image, add_to_cart
+			Cart module: add to cart, delete from cart
+			profile:
+				cash:
+					add_fund
+				order:
+					order_list
+				address:
+		client_module:
+			Login
+			index: order dashboard, P&L dashboard
+			orders: Update order status (order received > order shipped)
+			P&L: Payment received, Refund issued, total available _cash
+		
+	data structure:
+		users: user_id, name, email_id, mobile number, cash
+		address: user_id, address:{address_1:{Flat/building:#; Town: #; State: #, Pin: #}}, primary: #
+		product: product_id, category_id, product_name, image, price, discount
+		category: Category_id, Category name
+		inventory: product_id, stock qty
+		order: order_id: #, user_id: #, datetime: #, order_details: {product_id: #; order_qty: #}, order_status: received/deilvered, address
+		transactions: tran_id, user_id, tran_type (order_payment/ order_refund/ add_fund), datetime, tran_status(deafult: success)
+
+
+	header:
+		logo,  account balance, name|profile
+		top 3 categories, search
+	
+	user_module_routes:
+		/
+		/user_register
+		/user_login
+		/user_logout
+		/product page
+		/search
+		/cart
+		/profile
+		/profile/cash
+		/profile/orders
+		/profile/addresses
+
+	client_module_routes:
+		/
+		/client_orders
+		/
