@@ -4,22 +4,22 @@ final project:
 	development scope: 
 	[ (*) => phase-2 developement, not critical for mvp ];
 	build two flask-apps for two user_types: customer and client. 
-		on one customer app, customer to be able browse products, add fund, add/update address, place order and track order status.
-		on the client app, client to be able to see orders, update the status of the order, see p&l summary
+		Customer app, customer to be able browse products, add fund, add/update address, place order and track order status.
+		Client app, client to be able to see orders, update the status of the order, see p&l summary
 	db will be locally stored
 	apps to be developed for mobile first and scaled to web with barebone webpages and minimum css 
 	(*) once the apps are launched, the apps are to be developed on react.js as a Single Page Application and full css for best user experience
 
 	modules:
 		user_module:
-			(*)Pre-login browsing
+			(*) Pre-login browsing
 			registration module (name, mobile number, email_id, address, password(to be hashed))
 			login module (email_id/ number, password)
-			index: (product discovery) product ist, search, sort(high to low/ low-to-high), filter(category, price ranges)
-			(*)category page
+			index: (product discovery) product ist, search, sort(high to low/ low-to-high), filter((*)category, price ranges)
+			(*) category page
 			product page: Product details, image, add_to_cart
 			cart module: add to cart, delete from cart
-			order confirmation
+			order confirmation: select address, expected delivery timeline, order cofirmation
 			profile:
 				cash:
 					add_fund
@@ -33,12 +33,12 @@ final project:
 		
 		client_module:
 			Login
-			index: order dashboard, P&L dashboard, stocks dashboard
+			(*) index: order dashboard, P&L dashboard, stocks dashboard
 			orders: Update order status (order_received/ order_shipped)
-			inventory
-			p&l:
-			products:  
-			users:
+			(*) inventory
+			(*) p&l:
+			(*) products:  
+			(*) users:
 			(*) P&L: Payment received, Refund issued, total available _cash
 		
 	data structure:
@@ -76,4 +76,14 @@ final project:
 		/client_p&l ((*)update cash)
 		/client_products (update product catalogue)
 		/client_users (update users)
+
+
+dev plan:
+	create file structure for flask app
+	create app.py and configure it with all the modules
+	create index.html and layout.html
+	create requirement.text
+	create db
+	create tables
+	enter dummy data
 		
