@@ -1,30 +1,51 @@
-Final Project:
-	desc: An e-commerce app to order groceries from 100 items
+final project:
+	description: an e-commerce app to order groceries from. 
+
+	development scope: 
+	[ (*) => phase-2 developement, not critical for mvp ];
+	build two flask-apps for two user_types: customer and client. 
+		on one customer app, customer to be able browse products, add fund, add/update address, place order and track order status.
+		on the client app, client to be able to see orders, update the status of the order, see p&l summary
+	db will be locally stored
+	apps to be developed for mobile first and scaled to web with barebone webpages and minimum css 
+	(*) once the apps are launched, the apps are to be developed on react.js as a Single Page Application and full css for best user experience
+
 	modules:
 		user_module:
-			Pre-login browsing
-			register module
-			login module
-			index: Discovery: List, search, sort(high to low/ low-to-high), filter(category, price ranges)
-			Product page: Product details, image, add_to_cart
-			Cart module: add to cart, delete from cart
+			(*)Pre-login browsing
+			registration module (name, mobile number, email_id, address, password(to be hashed))
+			login module (email_id/ number, password)
+			index: (product discovery) product ist, search, sort(high to low/ low-to-high), filter(category, price ranges)
+			(*)category page
+			product page: Product details, image, add_to_cart
+			cart module: add to cart, delete from cart
+			order confirmation
 			profile:
 				cash:
 					add_fund
 				order:
 					order_list
 				address:
+					list of addresses
+					add address
+					(*) modify address
+					(*) delete address
+		
 		client_module:
 			Login
-			index: order dashboard, P&L dashboard
-			orders: Update order status (order received > order shipped)
-			P&L: Payment received, Refund issued, total available _cash
+			index: order dashboard, P&L dashboard, stocks dashboard
+			orders: Update order status (order_received/ order_shipped)
+			inventory
+			p&l:
+			products:  
+			users:
+			(*) P&L: Payment received, Refund issued, total available _cash
 		
 	data structure:
 		users: user_id, name, email_id, mobile number, cash
 		address: user_id, address:{address_1:{Flat/building:#; Town: #; State: #, Pin: #}}, primary: #
 		product: product_id, category_id, product_name, image, price, discount
-		category: Category_id, Category name
+		category: category_id, category name
 		inventory: product_id, stock qty
 		order: order_id: #, user_id: #, datetime: #, order_details: {product_id: #; order_qty: #}, order_status: received/deilvered, address
 		transactions: tran_id, user_id, tran_type (order_payment/ order_refund/ add_fund), datetime, tran_status(deafult: success)
@@ -32,7 +53,7 @@ Final Project:
 
 	header:
 		logo,  account balance, name|profile
-		top 3 categories, search
+		top 3 categories(*), search
 	
 	user_module_routes:
 		/
@@ -42,12 +63,17 @@ Final Project:
 		/product page
 		/search
 		/cart
+		/order_confirmation
 		/profile
 		/profile/cash
 		/profile/orders
 		/profile/addresses
 
 	client_module_routes:
-		/
-		/client_orders
-		/
+		/ (order dashboard(order received), stock dashboard(available stocks/ out of stock)
+		/client_orders (update order_status)
+		/client_inventory (update stocks => product_id, stock qty)
+		/client_p&l ((*)update cash)
+		/client_products (update product catalogue)
+		/client_users (update users)
+		
