@@ -79,11 +79,19 @@ final project:
 
 
 dev plan:
-	create file structure for flask app
+	create file structure for flask app (customer app)
 	create app.py and configure it with all the modules
 	create index.html and layout.html
-	create requirement.text
+	create requirement.txt
 	create db
 	create tables
 	enter dummy data
-		
+	import modules in app.py
+	develope customer app first
+	define session, routes and login 
+	define functions in functions.py
+	create route sub-routines
+	develope index.html, create styles.css
+	create all module pages
+	change
+	

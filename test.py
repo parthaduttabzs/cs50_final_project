@@ -1,20 +1,36 @@
 # import requests module
 import requests
 import json
+import urllib.parse
+import sys
 
 # Making a get request
-response = requests.get('https://api.github.com')
-  
-# print response
-print(response)
+# response = requests.get('https://api.github.com')
 
-header = response.headers 
+meme = sys.argv[1]
+top = sys.argv[2]
+bottom = sys.argv[3]
+
+url = f"https://apimeme.com/meme?meme={urllib.parse.quote_plus(meme)}&top={urllib.parse.quote_plus(top)}&bottom={urllib.parse.quote_plus(bottom)}"
+
+
+response = requests.get(url)
+
+with open("/home/projects/final_project/meme2.png",'wb') as f:
+    f.write(response.content)
+
+print(response)
+# response = requests.get(url)
+# # print response
+# print(response)
+
+# header = response.headers 
 
 # json_data = response.headers
 # json_object = json.loads(json_data)
 # print headers of response
-for i in header:
-    print(f"{i}: {header[i]}")
+# for i in header:
+#     print(f"{i}: {header[i]}")
 
 
 
