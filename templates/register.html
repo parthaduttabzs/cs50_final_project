@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid col-8 py-5 text-center">
+        <form action="/register" method="post">
+            <div class="row mb-3">
+                <div class="col">
+                    <strong for="name" class="form-lable">Name</strong>
+                </div>
+                <div class="col">
+                    <input type="tel" required autocomplete="off" id="name" name="name" class="form-control" autofocus name="name" placeholder="Your name">
+                </div>
+            </div class="row mb-3"><div class="row mb-3">
+                <div class="col">
+                    <strong for="mobile_number" class="form-lable">Mobile number</strong>
+                </div>
+                <div class="col">
+                    <input type="tel" required autocomplete="off" id="phone" class="form-control" autofocus name="phone" placeholder="91+">
+                </div>
+            </div class="row mb-3">
+            <div class="row mb-3">
+                <div class="col">
+                    <strong for="email" class="form-lable">Email ID</strong>
+                </div>
+                <div class="col">
+                    <input type="email" required autocomplete="off" id="email" class="form-control" autofocus name="email" placeholder="Your Email ID">
+                </div>
+            </div class="row mb-3">
+            <div class="row mb-3">
+                <div class="col">
+                    <strong strong for="password" class="form-lable">Password</strong>
+                    <label><small>(password needs to be atleast 6 character, with min 1 upper, 1 lower, 1 digit and 1 special ('@', '#', '_') character)</small></label>
+                </div>
+                <div class="col">
+                    <input type="password" required autocomplete="off" id="password" class="form-control" autofocus name="password" placeholder="Set a password">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <strong for="confirmation" class="form-lable">Confirmation</strong>
+                </div>
+                <div class="col">
+                    <input type="password" required autocomplete="off" id="confirmation" class="form-control" autofocus name="confirmation" placeholder="Re-enter the password">
+                </div>
+            </div class="row mb-3">
+            
+            
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

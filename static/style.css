@@ -1,0 +1,30 @@
+.example
+{
+    color: aqua;
+}
+
+img {
+    /* padding: 10%; */
+    display: block;
+    /* max-width: 100%; */
+    height: 100px;
+    align-items: center;
+}
+
+@media (min-width: 390px) {
+  #card {
+    font-size: 0.8rem;
+    line-height: 1rem;
+  }
+}
+
+.tools {
+align-items: flex-end;
+padding-top: 1rem;
+padding-bottom: 1rem;
+padding-right: 1rem;
+padding-left: 0rem;
+}
+.function {
+display: flex;
+}

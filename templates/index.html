@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block user %}
+    {{ user_data[0]["name"] }}
+{% endblock %}
+
+{% block fund %}
+    Fund: {{ user_data[0]["cash"] }}
+{% endblock %}
+{% block main%}
+    <!-- search bar -->
+    <div class="container mt-3">
+        <form class="row g-3">
+            <div class="col-lg-10 col-8">
+                <input class="form-control me-2" autocomplete = "on" autofocus name="search" type="text" placeholder="Search"aria-label="Search">
+            </div>
+            <div class="d-grid col-lg-2 col-4 mx-auto">
+                <button class="btn btn-outline-success" name="submit" type="submit">Search</button>
+            </div>
+        </form>
+    </div>     
+    <!-- Sort by/ Filter by -->
+        <div class="function container">
+            <div class="btn-group">
+                <!-- sort by -->
+                <div class="tools dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      Sort by
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
+                      <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
+                      <li><a class="dropdown-item" href="#">Relevance</a></li>
+                    </ul>
+                </div>
+                <!-- Filter by -->
+                <div class="tools dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      Filter by
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="#">Fruits</a></li>
+                      <li><a class="dropdown-item" href="#">Grocery Low</a></li>
+                      <li><a class="dropdown-item" href="#">Vegetables</a></li>
+                    </ul>
+                </div>            
+            </div>
+        </div>
+        <!-- Product list -->
+        <div class="container">
+            <div class="stack gap-3">
+                {% for i in range(5) %}
+                <div class="container bg-light" id="card">
+                    <div class="row mb-3">
+                        <div class="col-lg-3 col-4">
+                            <image alt="milk" src="static/images/milk_200.png"></image>
+                        </div>
+                        <div class="col-lg-6 col-4">
+                            <h5>name</h5>
+                            <small>category</small><br>
+                            <small>description: Lorem, ipsum dolor sit amet consectetur adipisicing elit. </small>
+                            <h5>price</h5>
+                        </div>
+                        <div class="col-lg-3 col-4">
+                            <label><small>Qty</small></label>
+                            <input class="form-control form-control-sm" type="number">
+                            <button class="btn btn-sm btn-outline-success mt-2" type="submit"><small>Add to Cart</small></button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endblock %}
