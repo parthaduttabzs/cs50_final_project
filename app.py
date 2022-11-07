@@ -226,12 +226,19 @@ def cart():
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
     cart = cart[0]['cart_items']
-    # cart = list(str.split(cart,","))
     cart = json.loads( cart )
+    for i in range(2):
+        prod = db.execute("SELECT * FROM products WHERE product_id = ?;", cart[i]["product_id"])
+        cart[i]["product_name"] = prod[0]["product_name"]
+        cart[i]["price"] = prod[0]["price"]
+        cart[i]["image"] = prod[0]["image"]
+        cart[i]["desc"] = prod[0]["desc"]
+        cart[i]["amount"] = int(prod[0]["price"]) * int(cart[i]["qty"])
+    
     if request.method == "POST":
         product_id = request.form.get("product_id")
         product_name = db.execute("SELECT product_name, price FROM products WHERE product_id = ?", product_id)
         qty = request.form.get("qty")
         # db.execute("UPDATE carts SET cart_items=? WHERE user_id=?",)
-    flash(f"You have reached cart for user #{user_id}")
+    # flash(f"You have reached cart for user #{user_id}")
     return render_template("cart.html", cart=cart, user_data=user_data)

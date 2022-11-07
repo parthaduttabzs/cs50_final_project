@@ -57,22 +57,22 @@
         <!-- Product list -->
         <div class="container">
             <div class="stack gap-3">
-                {% for product_id in product_data %}
+                {% for i in product_data %}
                 <div class="container bg-light" id="card">
                     <div class="row mb-3">
                         <div class="col-lg-3 col-4">
-                            <image alt="image" src={{ product_id['image'] }}></image>
+                            <image alt="image" src={{ i['image'] }}></image>
                         </div>
                         <div class="col-lg-5 col-4">
-                            <h5>{{ product_id["product_name"] }}</h5>
-                            <small>{{ product_id["category"] }}</small><br>
-                            <small>{{ product_id["desc"] }}</small>
-                            <h5>Rs. {{ product_id["price"] }} <span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;"> ( {{ product_id["discount"]|percent }} off ) </span></h5>
+                            <h5>{{ i["product_name"] }}</h5>
+                            <small>{{ i["category"] }}</small><br>
+                            <small>{{ i["desc"] }}</small>
+                            <h5>Rs. {{ i["price"] }} <span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;"> ( {{ product_id["discount"]|percent }} off ) </span></h5>
                         </div>
                         <div class="col-lg-4 col-4">
                             <label><small>Qty</small></label>
-                                <button class="btn btn-sm btn-outline-success mt-2" id="add_item" onclick="qty({{ product_id['product-id'] }})">+1</button>
-                                <a id="qty" value="0" name="qty" value="0"></a>
+                                <button class="btn btn-sm btn-outline-success mt-2" id="" onclick='qty(this, "add")''>+1</button>
+                                <a id="{{ i['product-id'] }}_qty" value="0" name="qty" value="0"></a>
                                 <input  hidden name="product_id" value="{product_data[0]['product_id']}">
                                 <button class="btn btn-sm btn-outline-success mt-2" id="remove_item" onclick="qty(this)">-1</button>
                                 <button class="btn btn-sm btn-outline-success mt-2" onclick="add_cart()"><small>Add to Cart</small></button>
@@ -96,7 +96,7 @@
                         <input hidden name="product_id" id="product_id" value="product-id">
                         <input hidden name="product_qty" id="product_qty" value="product-qty">
                         <input hidden name="product_price" id="product_price" value="product-price">
-                        <button class="btn btn-primary" type="submit" style="font-weight: bold">Checkout</button>
+                        <button class="btn btn-primary" type="submit" style="font-weight: bold">Go to Cart</button>
                     </form>
                 </div>
             </div>
@@ -113,7 +113,7 @@
                     clicks = clicks - 1;
                     // console.log(clicks)
                 }
-                document.getElementById("qty").innerHTML = clicks;
+                document.getElementById(element+"_qty").innerHTML = clicks;
             }
         </script>
     {% endblock %}
