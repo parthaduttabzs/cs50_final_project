@@ -8,6 +8,10 @@
     {{ user_data[0]["name"] }}
 {% endblock %}
 
+{% block cart %}
+    {{ cart }}
+{% endblock %}
+
 {% block fund %}
     Fund: {{ user_data[0]["cash"] }}
 {% endblock %}
@@ -44,7 +48,7 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
                       <li><a class="dropdown-item" href="#">Fruits</a></li>
-                      <li><a class="dropdown-item" href="#">Grocery Low</a></li>
+                      <li><a class="dropdown-item" href="#">Grocery</a></li>
                       <li><a class="dropdown-item" href="#">Vegetables</a></li>
                     </ul>
                 </div>            
@@ -53,26 +57,67 @@
         <!-- Product list -->
         <div class="container">
             <div class="stack gap-3">
-                {% for i in range(5) %}
+                {% for product_id in product_data %}
                 <div class="container bg-light" id="card">
                     <div class="row mb-3">
                         <div class="col-lg-3 col-4">
-                            <image alt="milk" src="static/images/milk_200.png"></image>
+                            <image alt="image" src={{ product_id['image'] }}></image>
                         </div>
-                        <div class="col-lg-6 col-4">
-                            <h5>name</h5>
-                            <small>category</small><br>
-                            <small>description: Lorem, ipsum dolor sit amet consectetur adipisicing elit. </small>
-                            <h5>price</h5>
+                        <div class="col-lg-5 col-4">
+                            <h5>{{ product_id["product_name"] }}</h5>
+                            <small>{{ product_id["category"] }}</small><br>
+                            <small>{{ product_id["desc"] }}</small>
+                            <h5>Rs. {{ product_id["price"] }} <span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;"> ( {{ product_id["discount"]|percent }} off ) </span></h5>
                         </div>
-                        <div class="col-lg-3 col-4">
+                        <div class="col-lg-4 col-4">
                             <label><small>Qty</small></label>
-                            <input class="form-control form-control-sm" type="number">
-                            <button class="btn btn-sm btn-outline-success mt-2" type="submit"><small>Add to Cart</small></button>
+                                <button class="btn btn-sm btn-outline-success mt-2" id="add_item" onclick="qty({{ product_id['product-id'] }})">+1</button>
+                                <a id="qty" value="0" name="qty" value="0"></a>
+                                <input  hidden name="product_id" value="{product_data[0]['product_id']}">
+                                <button class="btn btn-sm btn-outline-success mt-2" id="remove_item" onclick="qty(this)">-1</button>
+                                <button class="btn btn-sm btn-outline-success mt-2" onclick="add_cart()"><small>Add to Cart</small></button>
+                            </form>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
-        {% endblock %}
+        <div id="checkout" class="container" style="background-color:#5DA7DB">
+            <div class="navbar">
+                <div class="nav-items" style="font-weight: bold; color:#ffffff">
+                    2 Items
+                </div>
+                <div class="nav-items" style="font-weight: bold; color:#ffffff">
+                    Rs. 250
+                </div>
+                <div class="nav-items">
+                    <form action="/cart" method="post">
+                        <input hidden name="product_id" id="product_id" value="product-id">
+                        <input hidden name="product_qty" id="product_qty" value="product-qty">
+                        <input hidden name="product_price" id="product_price" value="product-price">
+                        <button class="btn btn-primary" type="submit" style="font-weight: bold">Checkout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            clicks = 0;
+            products_cart = []
+            function qty(element) {
+                
+                if (element.id === "add_item") {
+                    clicks = clicks + 1;
+                    // console.log(clicks)
+                } else {
+                    clicks = clicks - 1;
+                    // console.log(clicks)
+                }
+                document.getElementById("qty").innerHTML = clicks;
+            }
+        </script>
+    {% endblock %}
+    
+        
+
+    </div>

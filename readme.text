@@ -42,10 +42,9 @@ final project:
 			(*) P&L: Payment received, Refund issued, total available _cash
 		
 	data structure:
-		users: user_id, name, email_id, mobile number, cash
+		users: user_id, username, name, email_id, mobile number, cash
 		address: user_id, address:{address_1:{Flat/building:#; Town: #; State: #, Pin: #}}, primary: #
-		product: product_id, category_id, product_name, image, price, discount
-		category: category_id, category name
+		products: product_id, category, product_name, description, image, price, discount
 		inventory: product_id, stock qty
 		order: order_id: #, user_id: #, datetime: #, order_details: {product_id: #; order_qty: #}, order_status: received/deilvered, address
 		transactions: tran_id, user_id, tran_type (order_payment/ order_refund/ add_fund), datetime, tran_status(deafult: success)
@@ -60,7 +59,7 @@ final project:
 		/user_register
 		/user_login
 		/user_logout
-		/product page
+		(*)/product page
 		/search
 		/cart
 		/order_confirmation

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block user %}
+    {{ user_data[0]["name"] }}
+{% endblock %}
+
+{% block fund %}
+    Fund: {{ user_data[0]["cash"] }}
+{% endblock %}
+
+{% block cart %}
+    {{ 0 }}
+{% endblock %}
+
+{% block main %}
+    <div>        
+        {% for i in range(2) %}
+            <div class="container">
+                {{ cart[i]["product_id"] }}
+                {{ cart[i]["qty"] }}
+                {{ cart[i]["price"] }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

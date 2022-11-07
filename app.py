@@ -1,8 +1,8 @@
 import os
+import json
 from flask import Flask, render_template, session, request, redirect, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 from cs50 import SQL
-
 from flask_session import Session
 from functools import wraps
 from PIL import Image
@@ -14,6 +14,7 @@ app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
 
 # image resizing
 image = Image.open("static/images/milk.png")
@@ -49,6 +50,14 @@ def login_required(f):
     return decorated_function
 
 
+# define percent filter
+def percent(value):
+    """Format value as percent."""
+    return f"{value:,.0%}"
+# make filter available in jinja2
+app.jinja_env.filters["percent"] = percent
+
+    
 def password_strength(password):
     # initiating variables
     length = len(password)
@@ -83,8 +92,12 @@ def password_strength(password):
 @app.route("/")
 @login_required
 def index():
-    user_data = db.execute("SELECT * FROM users WHERE user_id = ?", session["user_id"])
-    return render_template("index.html", user_data = user_data)
+    user_id = session["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    product_data = db.execute("SELECT * FROM products;")
+    # cart_count = len(db.execute("SELECT * FROM carts WHERE user_id=?", user_id)["cart_items"])
+    cart_count = 0
+    return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart_count)
 
 
 def error(message, code=400):
@@ -204,3 +217,21 @@ def add_fund():
         return redirect("/")
     # if user is visiting the add fund page
     return render_template("add_fund.html", user_data=user_data)
+
+
+@app.route("/cart", methods=["GET", "POST"])
+@login_required
+def cart():
+    user_id = session["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
+    cart = cart[0]['cart_items']
+    # cart = list(str.split(cart,","))
+    cart = json.loads( cart )
+    if request.method == "POST":
+        product_id = request.form.get("product_id")
+        product_name = db.execute("SELECT product_name, price FROM products WHERE product_id = ?", product_id)
+        qty = request.form.get("qty")
+        # db.execute("UPDATE carts SET cart_items=? WHERE user_id=?",)
+    flash(f"You have reached cart for user #{user_id}")
+    return render_template("cart.html", cart=cart, user_data=user_data)
