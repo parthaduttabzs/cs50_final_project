@@ -74,7 +74,7 @@
                             <h5>{{ i["product_name"] }}</h5>
                             <small>{{ i["category"] }}</small><br>
                             <small>{{ i["desc"] }}</small>
-                            <h5>Rs. {{ i["price"] }} <span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;"> ( {{ i["discount"]|percent }} off ) </span></h5>
+                            <h5>Rs. {{ i["price"] }} <p><span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;">&nbsp {{ i["discount"]|percent }} off &nbsp</span></p></h5>
                         </div>
                         <div class="col-lg-3 col-3">
                             <form action="/add_to_cart" method="post">

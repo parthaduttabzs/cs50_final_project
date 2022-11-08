@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Cart
+    Order Confirmation
 {% endblock %}
 
 {% block user %}
@@ -16,6 +16,7 @@
     {{ cart|length }}
 {% endblock %}
 
+
 {% block main %}
     <div>
         <!-- {{ cart }}<br><br>
@@ -29,10 +30,9 @@
                     Total cart value: <strong>Rs.<a id="total_amount"></strong></a>
                 </div>
                 <div class="col-lg-4 col-7 d-grid justify-content-around">
-                    <a href="/address"><button class="btn btn-primary">
-                        Proceed
+                    <a href="/payment"><button class="btn btn-primary">
+                        Make payment
                     </button></a>
-                    <!-- <p>{{ address }}</p> -->
                 </div>
             </div>
         </div>
@@ -57,37 +57,8 @@
                             <strong id="{{ i['product_id']}}+_amount">Amount: {{ i["amount"] }}</strong>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-4 d-grid justify-content-around">
-                        <form action="/remove_from_cart" method="post">
-                            <input hidden id={{ i["product_id"] }} name="product_id" value={{ i["product_id"] }}>
-                            <button class="btn btn-outline-danger btn-sm">Remove from cart</button>
-                        </form>
-                    </div> 
                 </div>                
             </div>
         {% endfor %}
     </div>
-    
-    
-    <div class="container gx-0 mb- mt-5">
-        <div class="col">
-            <h6>Deliver to:</h6>
-            <!-- <h6>Select Address: {{ cart }}</h6> -->
-        </div>
-        <ul class="list-group-flush">
-            {% for i in address %}
-            <li class="list-group-item">
-              <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="firstRadio" checked>
-              <label class="form-check-label" for="firstRadio">{{ i['address'] }}</label>
-            </li>
-            {% endfor %}
-            <a class="nav-link" href="/add_address">Add new Address</a>
-    </div>
-    <script>
-        let total_amount = 0;
-        {% for i in cart %}
-            total_amount += parseInt({{ i["amount"] }});
-        {% endfor %}
-        document.getElementById("total_amount").innerHTML = total_amount;
-    </script>
 {% endblock %}

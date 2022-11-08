@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Address
+{% endblock %}
+
+{% block user %}
+{{ user_data[0]["name"] }} | Fund: {{ user_data[0]["cash"] }}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid col-8 py-5 text-center">    
+    <form action="/add_address" method="post">
+        <div class="mb-3">
+            <input type = "text" name="address" class="form-control mx-auto w-auto mb-3"required autocomplete="off" placeholder="Add new address">
+            <button class="btn btn-primary" type="submit">Add Address</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

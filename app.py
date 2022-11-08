@@ -202,6 +202,7 @@ def logout():
 
 
 @app.route("/add_fund", methods=["GET", "POST"])
+@login_required
 def add_fund():
     # get user data
     user_id = session["user_id"]
@@ -225,6 +226,9 @@ def add_fund():
 def cart():
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    address = db.execute("SELECT address FROM address WHERE user_id= ?", f'{user_id}')
+    address = address[0]['address']
+    address = json.loads( address )
     cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
     cart = cart[0]['cart_items']
     cart = json.loads( cart )
@@ -242,7 +246,7 @@ def cart():
         qty = request.form.get("qty")
         # db.execute("UPDATE carts SET cart_items=? WHERE user_id=?",)
     # flash(f"You have reached cart for user #{user_id}")
-    return render_template("cart.html", cart=cart, user_data=user_data)
+    return render_template("cart.html", cart=cart, user_data=user_data, address=address)
 
 
 @app.route("/add_to_cart", methods=["GET", "POST"])
@@ -289,3 +293,38 @@ def remove_from_cart():
             return redirect("/cart")
 
 
+@app.route("/confirm", methods=["GET", "POST"])
+@login_required
+def checkout():
+    user_id = session["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
+    cart = cart[0]['cart_items']
+    cart = json.loads( cart )
+    for i in cart:
+        prod = db.execute("SELECT * FROM products WHERE product_id = ?;", i["product_id"])
+        i["product_name"] = prod[0]["product_name"]
+        i["price"] = prod[0]["price"]
+        i["image"] = prod[0]["image"]
+        i["desc"] = prod[0]["desc"]
+        i["amount"] = int(prod[0]["price"]) * int(i["qty"])
+    return render_template("confirm.html", cart=cart, user_data=user_data)
+
+
+@app.route("/add_address", methods=["GET", "POST"])
+@login_required
+def add_address():
+    # get user data
+    user_id = session["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    address = db.execute("SELECT address FROM address WHERE user_id= ?", f'{user_id}')
+    address = address[0]['address']
+    address = json.loads( address )
+    if request.method == "POST":
+        new = {}
+        new['address'] = request.form.get("address")
+        address.append(new)
+        db.execute("UPDATE address SET address = ?;", json.dumps(address))
+        flash(f"New address has been added")
+        return redirect("/cart")
+    return render_template("address.html", user_data=user_data, address=address)
