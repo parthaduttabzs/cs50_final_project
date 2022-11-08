@@ -86,7 +86,8 @@
     <script>
         let total_amount = 0;
         {% for i in cart %}
-            total_amount += parseInt({{ i["amount"] }});
+            console.log({{ i["amount"] }})
+            total_amount += ({{ i["amount"] }});
         {% endfor %}
         document.getElementById("total_amount").innerHTML = total_amount;
     </script>

@@ -209,9 +209,9 @@ def add_fund():
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     # if user has placed a add fund request
     if request.method == "POST":
-        amount = request.form.get("amount")
+        amount = int(request.form.get("amount"))
         # validation check
-        if not 0 < int(amount) < 1000000000:
+        if not 0 < amount < 1000000000:
             return error("Entered amount is invalid", 406)
         # execute fund addition
         db.execute(f"UPDATE users SET cash = (cash + ?) WHERE user_id = ?", amount, user_id)
@@ -224,11 +224,15 @@ def add_fund():
 @app.route("/cart", methods=["GET", "POST"])
 @login_required
 def cart():
+    # get user data
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    # get address data of the user
     address = db.execute("SELECT address FROM address WHERE user_id= ?", f'{user_id}')
     address = address[0]['address']
+    #convert address details in JSON for JINJA
     address = json.loads( address )
+    # get cart data of the user
     cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
     cart = cart[0]['cart_items']
     cart = json.loads( cart )
@@ -239,13 +243,6 @@ def cart():
         i["image"] = prod[0]["image"]
         i["desc"] = prod[0]["desc"]
         i["amount"] = int(prod[0]["price"]) * int(i["qty"])
-    
-    if request.method == "POST":
-        product_id = request.form.get("product_id")
-        product_name = db.execute("SELECT product_name, price FROM products WHERE product_id = ?", product_id)
-        qty = request.form.get("qty")
-        # db.execute("UPDATE carts SET cart_items=? WHERE user_id=?",)
-    # flash(f"You have reached cart for user #{user_id}")
     return render_template("cart.html", cart=cart, user_data=user_data, address=address)
 
 
@@ -258,11 +255,13 @@ def add_to_cart():
     cart = json.loads( cart )
     if request.method == "POST":
         product_id = request.form.get("product_id")
-        qty = request.form.get("qty")
+        qty = int(request.form.get("qty"))
+        if qty < 0:
+            return error("Please enter valid inputs", 400)
         # price = request.form.get("price")
         for i in cart:
             if i['product_id'] == product_id:
-                i['qty'] = int(i['qty']) + int(qty)
+                i['qty'] = int(i['qty']) + (qty)
                 db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart))
                 flash(f"cart has been updated")
                 return redirect("/")

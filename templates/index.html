@@ -80,7 +80,7 @@
                             <form action="/add_to_cart" method="post">
                                 <!-- qty -->
                                 <div class="row">
-                                    <input class = "form-control form-control-sm mt-2" name="qty" id={{ i['product_id'] }}_qty placeholder="qty">
+                                    <input class = "form-control form-control-sm mt-2" required type="number" name="qty" id={{ i['product_id'] }}_qty placeholder="qty">
                                 </div>
                                 <!-- counter -->
                                 <div class="row">
@@ -122,10 +122,10 @@
             let clicks = 0;
             function counter(element, mode) {
                 if (mode === "add") {
-                    clicks = clicks + 1;
+                    clicks = Math.max(clicks, 0) + 1;
                     // console.log(clicks);
                 } else {
-                    clicks = clicks - 1;
+                    clicks = Math.max(clicks, 1) - 1;
                     // console.log(clicks);
                 }
                 console.log(element.id+'_qty')
