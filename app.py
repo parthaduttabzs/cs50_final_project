@@ -220,30 +220,6 @@ def add_fund():
     return render_template("add_fund.html", user_data=user_data)
 
 
-@app.route("/add_to_cart", methods=["GET", "POST"])
-@login_required
-def add_to_cart():
-    user_id = session["user_id"]
-    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
-    cart = cart[0]['cart_items']
-    cart = json.loads( cart )
-    if request.method == "POST":
-        product_id = request.form.get("product_id")
-        qty = request.form.get("qty")
-        # price = request.form.get("price")
-        for i in cart:
-            if i['product_id'] == product_id:
-                i['qty'] = int(i['qty']) + int(qty)
-                db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart))
-                flash(f"cart has been updated")
-                return redirect("/")
-        # cart[len(cart)]['product_id'] = product_id
-        # cart[len(cart)]['qty'] = qty
-        # cart[len(cart)]['price'] = db.execute("SELECT price FROM products WHERE product_id = ?", product_id)
-        # db.execute("UPDATE carts SET cart_items = ?;", cart)
-        return redirect("/")
-
-
 @app.route("/cart", methods=["GET", "POST"])
 @login_required
 def cart():
@@ -267,3 +243,49 @@ def cart():
         # db.execute("UPDATE carts SET cart_items=? WHERE user_id=?",)
     # flash(f"You have reached cart for user #{user_id}")
     return render_template("cart.html", cart=cart, user_data=user_data)
+
+
+@app.route("/add_to_cart", methods=["GET", "POST"])
+@login_required
+def add_to_cart():
+    user_id = session["user_id"]
+    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
+    cart = cart[0]['cart_items']
+    cart = json.loads( cart )
+    if request.method == "POST":
+        product_id = request.form.get("product_id")
+        qty = request.form.get("qty")
+        # price = request.form.get("price")
+        for i in cart:
+            if i['product_id'] == product_id:
+                i['qty'] = int(i['qty']) + int(qty)
+                db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart))
+                flash(f"cart has been updated")
+                return redirect("/")
+        new = {}
+        new['product_id'] = product_id
+        new['qty'] = qty
+        new['price'] = db.execute("SELECT price FROM products WHERE product_id = ?", product_id)
+        cart.append(new)
+        db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart))
+        flash(f"cart has been updated")
+        return redirect("/")
+
+
+@app.route("/remove_from_cart", methods=["GET", "POST"])
+@login_required
+def remove_from_cart():
+    user_id = session["user_id"]
+    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
+    cart = cart[0]['cart_items']
+    cart = json.loads( cart )
+    product_id = request.form.get("product_id")
+    for i in cart:
+        if i['product_id'] == product_id:
+            cart.remove(i)
+            # cart.pop()[i]
+            db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart))
+            flash(f"cart has been updated")
+            return redirect("/cart")
+
+

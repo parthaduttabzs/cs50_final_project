@@ -62,10 +62,10 @@
         </div>
         <!-- Product list -->
         <!-- {{ product_data }} -->
-        <div class="container gx-0">
+        <div class="container gx-1">
             <div class="stack gap-3">
                 {% for i in product_data %}
-                <div class="container bg-light gx-0" id="card">
+                <div class="container bg-light" id="card">
                     <div class="row mb-3 align-items-center">
                         <div class="col-lg-3 col-4">
                             <image alt="image" src={{ i['image'] }}></image>
@@ -76,7 +76,7 @@
                             <small>{{ i["desc"] }}</small>
                             <h5>Rs. {{ i["price"] }} <span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;"> ( {{ i["discount"]|percent }} off ) </span></h5>
                         </div>
-                        <div class="col-lg-3 col-3 gx-0">
+                        <div class="col-lg-3 col-3">
                             <form action="/add_to_cart" method="post">
                                 <!-- qty -->
                                 <div class="row">
@@ -123,10 +123,10 @@
             function counter(element, mode) {
                 if (mode === "add") {
                     clicks = clicks + 1;
-                    console.log(clicks);
+                    // console.log(clicks);
                 } else {
                     clicks = clicks - 1;
-                    console.log(clicks);
+                    // console.log(clicks);
                 }
                 console.log(element.id+'_qty')
                 id = element.id+'_qty';

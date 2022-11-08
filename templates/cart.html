@@ -26,7 +26,7 @@
                     <h3>Your cart:</h3>
                 </div>
                 <div class="col-lg-4 col-5">
-                    Total cart value: Rs.<a id="total_amount"></a>
+                    Total cart value: <strong>Rs.<a id="total_amount"></strong></a>
                 </div>
                 <div class="col-lg-4 col-7 d-grid">
                     <button class="btn btn-primary">Proceed to payment</button>
@@ -54,15 +54,21 @@
                             <strong id="{{ i['product_id']}}+_amount">Amount: {{ i["amount"] }}</strong>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-4 d-grid">
+                    <div class="col-lg-4 col-4 d-grid justify-content-around">
+                        <form action="/remove_from_cart" method="post">
+                            <input hidden id={{ i["product_id"] }} name="product_id" value={{ i["product_id"] }}>
                             <button class="btn btn-outline-danger btn-sm">Remove from cart</button>
+                        </form>
                     </div> 
                 </div>                
             </div>
         {% endfor %}
     </div>
     <script>
-        total_amount=0;
-        document.getElementById("total_amount").innerHTML = "100";
+        let total_amount = 0;
+        {% for i in cart %}
+            total_amount += parseInt({{ i["amount"] }});
+        {% endfor %}
+        document.getElementById("total_amount").innerHTML = total_amount;
     </script>
 {% endblock %}
