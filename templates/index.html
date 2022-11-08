@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block cart %}
-    {{ cart }}
+    {{ cart|length }}
 {% endblock %}
 
 {% block fund %}
@@ -28,38 +28,45 @@
         </form>
     </div>     
     <!-- Sort by/ Filter by -->
-        <div class="function container">
-            <div class="btn-group">
-                <!-- sort by -->
-                <div class="tools dropdown">
-                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      Sort by
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
-                      <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
-                      <li><a class="dropdown-item" href="#">Relevance</a></li>
-                    </ul>
+        <div class="container">
+            <div class="col align-self-end">
+                <div class="btn-group">
+                    <!-- sort by -->
+                    <div class="tools dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          Sort by
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
+                          <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
+                          <li><a class="dropdown-item" href="#">Relevance</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" href="#">Reset</a></li>
+                        </ul>
+                    </div>
+                    <!-- Filter by -->
+                    <div class="tools dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          Filter by
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                          <li><a class="dropdown-item" href="#">Fruits</a></li>
+                          <li><a class="dropdown-item" href="#">Grocery</a></li>
+                          <li><a class="dropdown-item" href="#">Vegetables</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" href="#">Clear Filters</a></li>
+                        </ul>
+                    </div>            
                 </div>
-                <!-- Filter by -->
-                <div class="tools dropdown">
-                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      Filter by
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="#">Fruits</a></li>
-                      <li><a class="dropdown-item" href="#">Grocery</a></li>
-                      <li><a class="dropdown-item" href="#">Vegetables</a></li>
-                    </ul>
-                </div>            
             </div>
         </div>
         <!-- Product list -->
-        <div class="container">
+        <!-- {{ product_data }} -->
+        <div class="container gx-0">
             <div class="stack gap-3">
                 {% for i in product_data %}
-                <div class="container bg-light" id="card">
-                    <div class="row mb-3">
+                <div class="container bg-light gx-0" id="card">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-lg-3 col-4">
                             <image alt="image" src={{ i['image'] }}></image>
                         </div>
@@ -67,15 +74,28 @@
                             <h5>{{ i["product_name"] }}</h5>
                             <small>{{ i["category"] }}</small><br>
                             <small>{{ i["desc"] }}</small>
-                            <h5>Rs. {{ i["price"] }} <span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;"> ( {{ product_id["discount"]|percent }} off ) </span></h5>
+                            <h5>Rs. {{ i["price"] }} <span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;"> ( {{ i["discount"]|percent }} off ) </span></h5>
                         </div>
-                        <div class="col-lg-4 col-4">
-                            <label><small>Qty</small></label>
-                                <button class="btn btn-sm btn-outline-success mt-2" id="" onclick='qty(this, "add")''>+1</button>
-                                <a id="{{ i['product-id'] }}_qty" value="0" name="qty" value="0"></a>
-                                <input  hidden name="product_id" value="{product_data[0]['product_id']}">
-                                <button class="btn btn-sm btn-outline-success mt-2" id="remove_item" onclick="qty(this)">-1</button>
-                                <button class="btn btn-sm btn-outline-success mt-2" onclick="add_cart()"><small>Add to Cart</small></button>
+                        <div class="col-lg-3 col-3 gx-0">
+                            <form action="/add_to_cart" method="post">
+                                <!-- qty -->
+                                <div class="row">
+                                    <input class = "form-control form-control-sm mt-2" name="qty" id={{ i['product_id'] }}_qty placeholder="qty">
+                                </div>
+                                <!-- counter -->
+                                <div class="row">
+                                    <div class="col d-grid">
+                                        <button class="btn btn-sm btn-outline-secondary mt-2" type="button" id={{ i['product_id'] }} onclick='counter(this, "remove")'>-1</button>
+                                    </div>
+                                    <div class="col d-grid">
+                                        <button class="btn btn-sm btn-outline-secondary mt-2" type="button" id={{ i['product_id'] }} onclick='counter(this, "add")''>+1</button>    
+                                    </div>
+                                </div>
+                                <!-- Add to cart -->
+                                <input  hidden name="product_id" value={{ i['product_id'] }}>
+                                <div class="row d-grid">
+                                    <button class="btn btn-sm btn-success mt-2 mb-2" type="submit"><small>Add to Cart</small></button>
+                                </div>    
                             </form>
                         </div>
                     </div>
@@ -92,28 +112,25 @@
                     Rs. 250
                 </div>
                 <div class="nav-items">
-                    <form action="/cart" method="post">
-                        <input hidden name="product_id" id="product_id" value="product-id">
-                        <input hidden name="product_qty" id="product_qty" value="product-qty">
-                        <input hidden name="product_price" id="product_price" value="product-price">
+                    <form action="/cart" method="get">
                         <button class="btn btn-primary" type="submit" style="font-weight: bold">Go to Cart</button>
                     </form>
                 </div>
             </div>
         </div>
         <script>
-            clicks = 0;
-            products_cart = []
-            function qty(element) {
-                
-                if (element.id === "add_item") {
+            let clicks = 0;
+            function counter(element, mode) {
+                if (mode === "add") {
                     clicks = clicks + 1;
-                    // console.log(clicks)
+                    console.log(clicks);
                 } else {
                     clicks = clicks - 1;
-                    // console.log(clicks)
+                    console.log(clicks);
                 }
-                document.getElementById(element+"_qty").innerHTML = clicks;
+                console.log(element.id+'_qty')
+                id = element.id+'_qty';
+                document.getElementById(id).value = clicks;
             }
         </script>
     {% endblock %}

@@ -95,9 +95,10 @@ def index():
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     product_data = db.execute("SELECT * FROM products;")
-    # cart_count = len(db.execute("SELECT * FROM carts WHERE user_id=?", user_id)["cart_items"])
-    cart_count = 0
-    return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart_count)
+    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
+    cart = cart[0]['cart_items']
+    cart = json.loads( cart )
+    return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart)
 
 
 def error(message, code=400):
@@ -219,6 +220,30 @@ def add_fund():
     return render_template("add_fund.html", user_data=user_data)
 
 
+@app.route("/add_to_cart", methods=["GET", "POST"])
+@login_required
+def add_to_cart():
+    user_id = session["user_id"]
+    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
+    cart = cart[0]['cart_items']
+    cart = json.loads( cart )
+    if request.method == "POST":
+        product_id = request.form.get("product_id")
+        qty = request.form.get("qty")
+        # price = request.form.get("price")
+        for i in cart:
+            if i['product_id'] == product_id:
+                i['qty'] = int(i['qty']) + int(qty)
+                db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart))
+                flash(f"cart has been updated")
+                return redirect("/")
+        # cart[len(cart)]['product_id'] = product_id
+        # cart[len(cart)]['qty'] = qty
+        # cart[len(cart)]['price'] = db.execute("SELECT price FROM products WHERE product_id = ?", product_id)
+        # db.execute("UPDATE carts SET cart_items = ?;", cart)
+        return redirect("/")
+
+
 @app.route("/cart", methods=["GET", "POST"])
 @login_required
 def cart():
@@ -227,13 +252,13 @@ def cart():
     cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
     cart = cart[0]['cart_items']
     cart = json.loads( cart )
-    for i in range(2):
-        prod = db.execute("SELECT * FROM products WHERE product_id = ?;", cart[i]["product_id"])
-        cart[i]["product_name"] = prod[0]["product_name"]
-        cart[i]["price"] = prod[0]["price"]
-        cart[i]["image"] = prod[0]["image"]
-        cart[i]["desc"] = prod[0]["desc"]
-        cart[i]["amount"] = int(prod[0]["price"]) * int(cart[i]["qty"])
+    for i in cart:
+        prod = db.execute("SELECT * FROM products WHERE product_id = ?;", i["product_id"])
+        i["product_name"] = prod[0]["product_name"]
+        i["price"] = prod[0]["price"]
+        i["image"] = prod[0]["image"]
+        i["desc"] = prod[0]["desc"]
+        i["amount"] = int(prod[0]["price"]) * int(i["qty"])
     
     if request.method == "POST":
         product_id = request.form.get("product_id")

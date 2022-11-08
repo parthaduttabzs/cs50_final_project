@@ -42,12 +42,13 @@ final project:
 			(*) P&L: Payment received, Refund issued, total available _cash
 		
 	data structure:
-		users: user_id, username, name, email_id, mobile number, cash
-		address: user_id, address:{address_1:{Flat/building:#; Town: #; State: #, Pin: #}}, primary: #
-		products: product_id, category, product_name, description, image, price, discount
+		users: user_id, name, email, phone, hash, cash
 		inventory: product_id, stock qty
-		order: order_id: #, user_id: #, datetime: #, order_details: {product_id: #; order_qty: #}, order_status: received/deilvered, address
 		transactions: tran_id, user_id, tran_type (order_payment/ order_refund/ add_fund), datetime, tran_status(deafult: success)
+		orders: order_id: #, user_id: #, datetime: #, order_details: {product_id: #; order_qty: #}, order_status: received/deilvered, address
+		products: product_id, category, product_name, desc, image, price, discount
+		carts: (user_id, cart_items({product_id: 1; qty:1, price:20},{product_id: 2; qty:3, price:30})) 
+		address: user_id, address:{address_1:{Flat/building:#; Town: #; State: #, Pin: #}}, primary: #
 
 
 	header:
