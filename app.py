@@ -268,7 +268,7 @@ def add_to_cart():
         new = {}
         new['product_id'] = product_id
         new['qty'] = qty
-        new['price'] = db.execute("SELECT price FROM products WHERE product_id = ?", product_id)
+        new['price'] = db.execute("SELECT price FROM products WHERE product_id = ?", product_id)[0]['price']
         cart.append(new)
         db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart))
         flash(f"cart has been updated")
@@ -292,14 +292,18 @@ def remove_from_cart():
             return redirect("/cart")
 
 
-@app.route("/confirm", methods=["GET", "POST"])
+@app.route("/summary", methods=["GET", "POST"])
 @login_required
-def checkout():
+def summary():
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
     cart = cart[0]['cart_items']
     cart = json.loads( cart )
+    address = request.form.get('address_selected')
+    if len(address) == 0:
+        flash("Please select an address for delivery")
+        return redirect("/cart")
     for i in cart:
         prod = db.execute("SELECT * FROM products WHERE product_id = ?;", i["product_id"])
         i["product_name"] = prod[0]["product_name"]
@@ -307,7 +311,7 @@ def checkout():
         i["image"] = prod[0]["image"]
         i["desc"] = prod[0]["desc"]
         i["amount"] = int(prod[0]["price"]) * int(i["qty"])
-    return render_template("confirm.html", cart=cart, user_data=user_data)
+    return render_template("summary.html", cart=cart, user_data=user_data, address=address)
 
 
 @app.route("/add_address", methods=["GET", "POST"])

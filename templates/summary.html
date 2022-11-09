@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Order Confirmation
+{% endblock %}
+
+{% block user %}
+    {{ user_data[0]["name"] }}
+{% endblock %}
+
+{% block fund %}
+    Fund: {{ user_data[0]["cash"] }}
+{% endblock %}
+
+{% block cart %}
+    {{ cart|length }}
+{% endblock %}
+
+
+{% block main %}
+    <div>
+        <div class="container gx-0 mb-3 mt-3">
+            <div class="row gx-0 justify-content-between align-items-center">
+                <div class="col-lg-4 col-6">
+                    <h3>Order summary:</h3>
+                </div>
+                <!-- <div class="col-lg-4 col-6 d-grid justify-content-around">
+                    <a href="/payment"><button id="confirm_order" class="btn btn-primary">
+                        Confirm Order
+                    </button></a>
+                </div> -->
+            </div>
+        </div>
+        <!-- <h3>{{ cart }}</h3> -->
+        <div class="container">
+            <div class="row">
+                <h5>Cart Items: </h5>
+            </div>
+        </div>
+        {% for i in cart %}
+            <div class="container gx-0 bg-light">
+                <div class="row bg-light gx-0 mb-3 align-items-center">
+                    <div class="col-lg-6 col-6">
+                        <image alt="image" src={{ i["image"] }}></image>
+                    </div>
+                    <div class="col-lg-6 col-6">
+                        <div class="row">
+                            <h5>{{ i["product_name"] }}</h5>
+                        </div>
+                        <div class="row">
+                            <small>Qty: {{ i["qty"] }}</small>
+                        </div>
+                        <div class="row">
+                            <small>Price: {{ i["price"] }}</small>
+                        </div>
+                        <div class="row">
+                            <strong id="{{ i['product_id']}}+_amount">Amount: {{ i["amount"] }}</strong>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+        {% endfor %}
+        <div class="container">
+            <div class="row">
+                <h5>To be delivered at: </h5>
+            </div>
+            <div class="row bg-light">
+                <div class="col-lg-6 col-10">
+                    {{ address }}
+                </div>
+            </div>
+        </div>
+        <div class="container mt-3">
+            <div class="row">
+                <h5>Payment summary: </h5>
+            </div>
+            <div class="row bg-light">
+                <div class="col-lg-6 col-6">
+                    Total cart value:
+                </div>
+                <div class="col-lg-6 col-6">
+                    <strong>Rs. <a id="total_amount"></strong>
+                </div>
+            </div>
+            <div class="row bg-light" id="fund_warning">
+                <div class="col-lg-6 col-6">
+                    Total fund available:
+                </div>
+                <div class="col-lg-6 col-6 justify-content-around">
+                    <strong>Rs. {{ user_data[0]["cash"] }}</strong>
+                </div>
+            </div>
+            <!-- <div class="row"> -->
+            <div class="container">
+                <div class="col-lg-12 col-12 mt-3 d-grid justify-content-center">
+                    <!-- <span style="color:red">Fund insufficient!</span> -->
+                    <a href="/add_fund">
+                        <button class="btn btn-primary" id="add_fund" style="display: none;">
+                            Add Fund
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <!-- </div> -->
+        </div>
+    </div>
+    <footer>
+        <div class="float_container" id="cart_bar">
+            <div class="col-lg-12 col-12 mt-3 d-grid justify-content-center" id="add_fund">
+                <a href="/payment"><button id="confirm_order" class=" float btn btn-primary">
+                    Confirm Order
+                </button></a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        let total_amount = 0;
+        {% for i in cart %}
+            console.log({{ i["amount"] }})
+            total_amount += ({{ i["amount"] }});
+        {% endfor %}
+        document.getElementById("total_amount").innerHTML = total_amount;
+        cash_available = parseInt({{ user_data[0]["cash"] }});
+        console.log(cash_available);
+        if (cash_available < total_amount) {
+            document.getElementById("confirm_order").disabled = true;
+            document.getElementById("add_fund").style.display = 'block';
+            document.getElementById("fund_warning").style.color = 'red';
+        } else {
+            document.getElementById("add_fund").style.display = 'none';
+        }
+    </script>
+{% endblock %}

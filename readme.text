@@ -50,7 +50,6 @@ final project:
 		carts: (user_id, cart_items({product_id: 1; qty:1, price:20},{product_id: 2; qty:3, price:30})) 
 		address: user_id, address:{address_1:{Flat/building:#; Town: #; State: #, Pin: #}}, primary: #
 
-
 	header:
 		logo,  account balance, name|profile
 		top 3 categories(*), search

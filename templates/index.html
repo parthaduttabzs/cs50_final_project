@@ -62,6 +62,7 @@
         </div>
         <!-- Product list -->
         <!-- {{ product_data }} -->
+        <!-- {{ cart }} -->
         <div class="container gx-1">
             <div class="stack gap-3">
                 {% for i in product_data %}
@@ -103,18 +104,20 @@
                 {% endfor %}
             </div>
         </div>
-        <div id="checkout" class="container" style="background-color:#5DA7DB">
-            <div class="navbar">
-                <div class="nav-items" style="font-weight: bold; color:#ffffff">
-                    2 Items
-                </div>
-                <div class="nav-items" style="font-weight: bold; color:#ffffff">
-                    Rs. 250
-                </div>
-                <div class="nav-items">
-                    <form action="/cart" method="get">
-                        <button class="btn btn-primary" type="submit" style="font-weight: bold">Go to Cart</button>
-                    </form>
+        <div class="float_container" id="cart_bar">
+            <div id="go_to_cart" class="container" style="background-color:#5DA7DB">
+                <div class="navbar">
+                    <div class="nav-items" id = "cart_qty" style="color:#ffffff">
+
+                    </div>
+                    <div class="nav-items" id = "cart_amount" style="color:#ffffff">
+                        
+                    </div>
+                    <div class="nav-items">
+                        <form action="/cart" method="get">
+                            <button class="btn btn-primary" type="submit">Go to Cart</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,6 +135,24 @@
                 id = element.id+'_qty';
                 document.getElementById(id).value = clicks;
             }
+                // calculation for footer cart bar
+            $(document).ready(function () {                    
+                let cart_qty = 0;
+                let cart_amount = 0;
+                let amount = 0;
+                {% for i in cart %}
+                    cart_qty += parseInt({{ i['qty'] }});
+                    amount = parseInt({{ i['qty'] }}) * parseInt({{ i['price'] }});
+                    cart_amount += amount;
+                {% endfor %}
+                document.getElementById('cart_qty').innerHTML = 'Items added\:<br>' + cart_qty;
+                document.getElementById('cart_amount').innerHTML = 'Cart amount\:<br>' + 'Rs. '+cart_amount;
+                
+                if (cart_qty === 0) {
+                    document.getElementById('cart_bar').style.display = 'none';
+                }
+            });
+
         </script>
     {% endblock %}
     

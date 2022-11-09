@@ -28,12 +28,6 @@
                 <div class="col-lg-4 col-5">
                     Total cart value: <strong>Rs.<a id="total_amount"></strong></a>
                 </div>
-                <div class="col-lg-4 col-7 d-grid justify-content-around">
-                    <a href="/address"><button class="btn btn-primary">
-                        Proceed
-                    </button></a>
-                    <!-- <p>{{ address }}</p> -->
-                </div>
             </div>
         </div>
         <!-- <h3>{{ cart }}</h3> -->
@@ -51,10 +45,10 @@
                             <small>Qty: {{ i["qty"] }}</small>
                         </div>
                         <div class="row">
-                            <small>Price: {{ i["price"] }}</small>
+                            <small>Price: Rs. {{ i["price"] }}</small>
                         </div>
                         <div class="row">
-                            <strong id="{{ i['product_id']}}+_amount">Amount: {{ i["amount"] }}</strong>
+                            <strong id="{{ i['product_id']}}+_amount">Amount: Rs. {{ i["amount"] }}</strong>
                         </div>
                     </div>
                     <div class="col-lg-4 col-4 d-grid justify-content-around">
@@ -71,17 +65,29 @@
     
     <div class="container gx-0 mb- mt-5">
         <div class="col">
-            <h6>Deliver to:</h6>
-            <!-- <h6>Select Address: {{ cart }}</h6> -->
+            <h6>Select an address for delivery:</h6>
+            <!-- <h6>Select Address: {{ address }}</h6> -->
         </div>
-        <ul class="list-group-flush">
-            {% for i in address %}
-            <li class="list-group-item">
-              <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="firstRadio" checked>
-              <label class="form-check-label" for="firstRadio">{{ i['address'] }}</label>
-            </li>
-            {% endfor %}
-            <a class="nav-link" href="/add_address">Add new Address</a>
+        <div class="row">
+            <ul class="list-group-flush">
+                {% for i in address %}
+                <li class="list-group-item">
+                  <input class="form-check-input me-1" required type="radio" name="listGroupRadio" id="firstRadio" onclick="select_address({{ i }})">
+                  <label class="form-check-label" id="address_tag" for="firstRadio"> {{ i['address'] }} </label>
+                </li>
+                {% endfor %}
+                <a class="nav-link" href="/add_address">Add new Address</a>
+        </div>
+        <div class="col-lg-12 col-12 mt-3 d-grid justify-content-center">
+            <form action="/summary" method="post">
+                <input hidden name="address_selected" value="" id="address-selected">
+                <button class="btn btn-primary" type="submit">
+                    Proceed
+                </button>
+            </form>
+            
+            <!-- <p>{{ address }}</p> -->
+        </div>
     </div>
     <script>
         let total_amount = 0;
@@ -90,5 +96,12 @@
             total_amount += ({{ i["amount"] }});
         {% endfor %}
         document.getElementById("total_amount").innerHTML = total_amount;
+        
+        function select_address(address) {
+            console.log(address);
+            address = address['address'];
+            console.log(address);
+            document.getElementById("address-selected").value = address;
+            };
     </script>
 {% endblock %}
