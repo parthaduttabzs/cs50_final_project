@@ -5,6 +5,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from cs50 import SQL
 from flask_session import Session
 from functools import wraps
+import datetime
 import requests
 from PIL import Image
 
@@ -25,9 +26,8 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///ecomm.db")
 
+# following code helps with converting the images from webp to png and resize theme to 200x200 px
 
-
-# image resizing
 # path = "static/images/webp/"
 # files = os.listdir(path)
 # # id = 0
@@ -247,7 +247,9 @@ def add_fund():
         if not 0 < amount < 1000000000:
             return error("Entered amount is invalid", 406)
         # execute fund addition
-        db.execute(f"UPDATE users SET cash = (cash + ?) WHERE user_id = ?", amount, user_id)
+        db.execute("UPDATE users SET cash = (cash + ?) WHERE user_id = ?", amount, user_id)
+        # Log transaction
+        db.execute("INSERT INTO transactions (user_id, tran_type, amount, datetime, tran_status) VALUES(?,?,?,?,?);", user_id, "ADD_FUND", amount, datetime.datetime.now(), "SUCCESS")
         flash(f"Rs. {amount}/- has been added to your account")
         return redirect("/")
     # if user is visiting the add fund page
@@ -366,6 +368,50 @@ def add_address():
     return render_template("address.html", user_data=user_data, address=address)
 
 
+@app.route("/orders", methods=["GET", "POST"])
+@login_required
+def confirm_orders():
+    user_id = session["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    order_details = db.execute("SELECT * FROM orders WHERE user_id = ?", user_id)
+    if request.method == "POST":
+        cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
+        cart = cart[0]['cart_items']
+        cart = json.loads( cart )
+        address = request.form.get('address_selected')
+        order_amount = request.form.get("order_amount")
+        for i in cart:
+            prod = db.execute("SELECT * FROM products WHERE product_id = ?;", i["product_id"])
+            i["product_name"] = prod[0]["product_name"]
+            i["price"] = prod[0]["price"]
+            i["image"] = prod[0]["image"]
+            i["desc"] = prod[0]["desc"]
+            i["amount"] = int(prod[0]["price"]) * int(i["qty"])
+                
+        date_time = datetime.datetime.now()
+        order_items = json.dumps(cart)
+        # add order details to order table
+        db.execute("INSERT INTO orders (user_id, datetime, order_items, order_amount, address, order_status) VALUES(?,?,?,?,?,?)",user_id, date_time, order_items, order_amount, address, 'SUCCESS')
+        # empty current cart
+        db.execute("UPDATE carts SET cart_items = ?;", '[]')
+        # Log transaction
+        transaction_amount = -float(order_amount)
+        db.execute("INSERT INTO transactions (user_id, tran_type, amount, datetime, tran_status) VALUES(?,?,?,?,?);", user_id, "ORDER_PAYMENT", transaction_amount, datetime.datetime.now(), "SUCCESS")
+        # debit order amount from account fund
+        db.execute("UPDATE users SET cash = cash - ? WHERE user_id = ?", order_amount, user_id)
+        user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+        order_details = db.execute("SELECT * FROM orders WHERE user_id = ?", user_id)
+        flash("Order has been placed successfully")
+        return render_template("orders.html", user_data=user_data, order_details=order_details)
+    return render_template("orders.html", user_data=user_data, order_details=order_details)
 
-# if __name__ == '__main__':
-#     app.run(host='192.168.1.11',port=5000)
+
+@app.route("/view_order", methods=["GET", "POST"])
+@login_required
+def view_orders():
+    user_id = session["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    order_details = db.execute("SELECT * FROM orders WHERE order_id = ?", request.form.get('order_id'))
+    order_items = order_details[0]['order_items']
+    order_items = json.loads( order_items )
+    return render_template("order_details.html", user_data=user_data, order_details=order_details, order_items=order_items)

@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Order Confirmation
+{% endblock %}
+
+{% block user %}
+    {{ user_data[0]["name"] }}
+{% endblock %}
+
+{% block fund %}
+    Fund: {{ user_data[0]["cash"] }}
+{% endblock %}
+
+{% block cart %}
+    {{ cart|length }}
+{% endblock %}
+
+
+{% block main %}
+    <div>
+        <!-- <h3>{{ cart }}</h3> -->
+        <div class="container mt-3">
+            <div class="row">
+                <h5>My Orders: </h5>
+            </div>
+        </div>
+        {% for i in order_details %}
+            <div class="container mt-3 mb-3 bg-light">
+                <div class="row bg-light py-3 align-items-center">
+                    <div class="col-lg-6 col-8">
+                        <div class="row">
+                            <h5>Order ID: #{{ i["order_id"] }}</h5>
+                        </div>
+                        <div class="row">
+                            <small>Order placed at: {{ i["datetime"] }}</small>
+                        </div>
+                        <div class="row">
+                            <small>To be delivered at: {{ i["address"] }}</small>
+                        </div>
+                        <div class="row">
+                            <small>Order Amount: Rs. {{ i["order_amount"] }}</small>
+                        </div>
+                        <div class="row">
+                            <small>Order Status: {{ i["order_status"] }}</small>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-4 d-grid justify-content-around">
+                        <form action="/view_order" method="post">
+                            <input hidden id={{ i["order_id"] }} name="order_id" value={{ i["order_id"] }}>
+                            <button class="btn btn-outline-primary btn-sm">View Order Details</button>
+                        </form>
+                    </div> 
+                </div>                
+            </div>
+        {% endfor %}
+        
+    </div>
+    <!-- <footer> -->
+        
+    <!-- </footer> -->
+    <script>
+        
+    </script>
+{% endblock %} -->

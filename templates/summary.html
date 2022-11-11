@@ -60,7 +60,7 @@
                 </div>                
             </div>
         {% endfor %}
-        <div class="container">
+        <div class="container mt-5">
             <div class="row">
                 <h5>To be delivered at: </h5>
             </div>
@@ -70,7 +70,7 @@
                 </div>
             </div>
         </div>
-        <div class="container mt-3">
+        <div class="container mt-5">
             <div class="row">
                 <h5>Payment summary: </h5>
             </div>
@@ -105,10 +105,14 @@
         </div>
     </div>
     <!-- <footer> -->
-        <div class="col-lg-12 col-12 mt-3 d-grid justify-content-center" id="add_fund">
-            <a href="/payment"><button id="confirm_order" class=" float btn btn-primary">
-                Confirm Order
-            </button></a>
+        <div class="col-lg-12 col-12 mt-3 mb-5 d-grid justify-content-center" id="add_fund">
+            <form action="/orders" method="post">
+                <input hidden name="address_selected" value='{{ address }}'>
+                <input hidden name="order_amount" id="order_amount" value=''>
+                <button id="confirm_order" class=" float btn btn-primary">
+                    Confirm Order
+                </button></a>
+            </form>
         </div>
     <!-- </footer> -->
     <script>
@@ -118,6 +122,7 @@
             total_amount += ({{ i["amount"] }});
         {% endfor %}
         document.getElementById("total_amount").innerHTML = total_amount;
+        document.getElementById("order_amount").value = total_amount;
         cash_available = parseInt({{ user_data[0]["cash"] }});
         console.log(cash_available);
         if (cash_available < total_amount) {

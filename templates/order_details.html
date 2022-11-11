@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    My Orders
+{% endblock %}
+
+{% block user %}
+    {{ user_data[0]["name"] }}
+{% endblock %}
+
+{% block fund %}
+    Fund: {{ user_data[0]["cash"] }}
+{% endblock %}
+
+{% block cart %}
+    {{ cart|length }}
+{% endblock %}
+
+
+{% block main %}
+    <div>
+        <!-- <h3>{{ cart }}</h3> -->
+        <div class="container mt-3">
+            <div class="row">
+                <h5>My Orders: </h5>
+            </div>
+        </div>
+        <!-- {{ order_details }} -->
+        {% for i in order_details %}
+            <div class="container mt-3 mb-3 bg-light">
+                <div class="row bg-light py-3 align-items-center">
+                    <div class="col-lg-6 col-8">
+                        <div class="row">
+                            <h5>Order ID: #{{ i["order_id"] }}</h5>
+                        </div>
+                        <div class="row">
+                            <small>Order placed at: {{ i["datetime"] }}</small>
+                        </div>
+                        <div class="row">
+                            <small>To be delivered at: {{ i["address"] }}</small>
+                        </div>
+                        <div class="row">
+                            <small>Order Amount: Rs. {{ i["order_amount"] }}</small>
+                        </div>
+                        <div class="row">
+                            <small>Order Status: {{ i["order_status"] }}</small>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-4 d-grid justify-content-around">
+                        <form action="/orders">
+                            <button class="btn btn-outline-primary btn-sm">Back to Orders</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <!-- {{order_items}} -->
+        {% for n in order_items %}
+        <!-- {{ n }} -->
+            <div class="container mt-3 mb-3">
+                <div class="row gx-0 mb-3 align-items-center">
+                    <div class="col-lg-4 col-4">
+                        <image alt="image" src={{ n["image"] }}></image>
+                    </div>
+                    <div class="col-lg-4 col-4">
+                        <div class="row">
+                            <h5>{{ n["product_name"] }}</h5>
+                        </div>
+                        <div class="row">
+                            <small>Qty: {{ n["qty"] }}</small>
+                        </div>
+                        <div class="row">
+                            <small>Price: Rs. {{ n["price"] }}</small>
+                        </div>
+                        <div class="row">
+                            <strong id="{{ n['product_id']}}+_amount">Amount: Rs. {{ n["amount"] }}</strong>
+                        </div>
+                    </div> 
+                </div>                
+            </div>
+        {% endfor %}
+        
+    </div>
+    <!-- <footer> -->
+        
+    <!-- </footer> -->
+    <script>
+        
+    </script>
+{% endblock %} -->
