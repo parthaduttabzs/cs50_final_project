@@ -30,8 +30,35 @@ display: flex;
 }
 .float_container {
   position:fixed;
-  bottom:10px;
-  right: 10px;
-  left:10px;
+  bottom:0px;
+  right: 0px;
+  left:0px;
   cursor:pointer;
+}
+#topbar {
+  position: fixed;
+  top: 0px;
+}
+.footer_bar {
+  display: none;
+}
+@media screen and (max-width: 480px) {
+  .footer_bar {
+    display: block;
+    position:fixed;
+    /* height: 100px; */
+    bottom: 0px;
+    /* padding: 5px;
+    margin:0 auto;  */
+    right: 0px;
+    left: 0px;
+    cursor:pointer;
+  }
+  .float_container {
+    position:fixed;
+    bottom:70px;
+    right: 0px;
+    left:0px;
+    cursor:pointer;
+  }
 }

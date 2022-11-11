@@ -8,13 +8,14 @@
     {{ user_data[0]["name"] }}
 {% endblock %}
 
+{% block fund %}
+    Fund: {{ user_data[0]["cash"] }}
+{% endblock %}
+
 {% block cart %}
     {{ cart|length }}
 {% endblock %}
 
-{% block fund %}
-    Fund: {{ user_data[0]["cash"] }}
-{% endblock %}
 {% block main%}
     <!-- search bar -->
     <div class="container mt-3">
@@ -60,14 +61,11 @@
                 </div>
             </div>
         </div>
-        <!-- Product list -->
-        <!-- {{ product_data }} -->
-        <!-- {{ cart }} -->
         <div class="container gx-1">
-            <div class="stack gap-3">
+            <div class="stack">
                 {% for i in product_data %}
-                <div class="container bg-light" id="card">
-                    <div class="row mb-3 align-items-center">
+                <div class="container shadow bg-body" style="border-radius:0.6rem" id="card">
+                    <div class="row mb-3 py-3 align-items-center">
                         <div class="col-lg-3 col-4">
                             <image alt="image" src={{ i['image'] }}></image>
                         </div>

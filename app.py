@@ -415,3 +415,15 @@ def view_orders():
     order_items = order_details[0]['order_items']
     order_items = json.loads( order_items )
     return render_template("order_details.html", user_data=user_data, order_details=order_details, order_items=order_items)
+
+
+@app.route("/account", methods=["GET", "POST"])
+@login_required
+def account():
+    user_id = session["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    # get address data of the user
+    address = db.execute("SELECT address FROM address WHERE user_id= ?", f'{user_id}')
+    address = address[0]['address']
+    address = json.loads(address)
+    return render_template("account.html", user_data=user_data, address=address)

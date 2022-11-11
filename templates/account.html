@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block user %}
+    {{ user_data[0]["name"] }}
+{% endblock %}
+
+{% block fund %}
+    Fund: {{ user_data[0]["cash"] }}
+{% endblock %}
+
+{% block cart %}
+    {{ cart|length }}
+{% endblock %}
+
+
+{% block main %}
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h5>{{user_data[0]['name']}}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h6>My Details:</h6>
+            </div>
+        </div>
+        <div class="row justify-content-start">
+            <div class="col-12">
+                Email ID: {{user_data[0]['email']}}
+            </div>
+            <div class="col-12">
+                Phone no: {{user_data[0]['phone']}}
+            </div>
+            <div class="col-12">
+                Fund: Rs. {{user_data[0]['cash']}}
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="container mb- mt-5">
+        <div class="row justify-content-start">
+            <div class="col-12">
+                <h6>My Addresses:</h6>
+            </div>
+        </div>
+        <div class="row">
+            <ul class="list-group-flush">
+            {% for i in address %}
+                <li class="list-group-item">{{ i['address'] }}</li>
+            {% endfor %}
+            </ul>
+                <a class="nav-link" href="/add_address">Add new Address</a>
+        </div>
+    </div>
+    <script>
+        
+    </script>
+{% endblock %}
