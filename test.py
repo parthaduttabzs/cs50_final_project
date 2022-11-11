@@ -1,20 +1,39 @@
-import sqlite3
-from sqlite3 import Error
+text = '204629_16-aashirvaad-select-atta.webp'
+index_start = 0
+index_end = 0
+for i in range(0,len(text)-1,1):
+    if text[i].isalpha():
+        index_start = text.find(text[i])
+        continue
+    if text[i] == ".":
+        index_end = text.find(text[i])
+        break
+text1 = text[index_start:index_end]
+text2 = text1.replace("-"," ")
+text3 = text2.title()
+print(text3)
 
-def create_connection(db_file):
-    conn = None
 
-    try:
-        conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.closed()
 
-if __name__ == '__main__':
-    create_connection("ecomm.db")
+
+# # Create a DB
+# import sqlite3
+# from sqlite3 import Error
+
+# def create_connection(db_file):
+#     conn = None
+
+#     try:
+#         conn = sqlite3.connect(db_file)
+#         print(sqlite3.version)
+#     except Error as e:
+#         print(e)
+#     finally:
+#         if conn:
+#             conn.closed()
+
+# if __name__ == '__main__':
+#     create_connection("ecomm.db")
 
 # # import requests module
 # import requests

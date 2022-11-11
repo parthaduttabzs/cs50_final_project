@@ -5,8 +5,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from cs50 import SQL
 from flask_session import Session
 from functools import wraps
-from PIL import Image
 import requests
+from PIL import Image
 
 
 # Configure application
@@ -14,11 +14,6 @@ app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-
-
-# image resizing
-image = Image.open("static/images/milk.png")
-image.resize((200,200)).save("static/images/milk_200.png")
 
 
 # Configure session to use filesystem (instead of signed cookies)
@@ -29,6 +24,44 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///ecomm.db")
+
+
+
+# image resizing
+# path = "static/images/webp/"
+# files = os.listdir(path)
+# # id = 0
+# for file in files:
+#     img_path = path + file
+#     filename = os.path.splitext(file)[0]
+#     image = Image.open(img_path).convert("RGB")
+#     image.resize((200,200)).save(fr"static/images/{filename}.png","png")
+    
+    # print(text)
+    # text = '204629_16-aashirvaad-select-atta.webp'
+    # index_start = 0
+    # index_end = 0
+    # for i in range(0, len(text)-1, 1):
+    #     if text[i].isalpha():
+    #         index_start = text.find(text[i])
+    #         # print(text[i])
+    #         continue
+    #     if text[i] == ".":
+    #         index_end = text.find(text[i])
+    #         break
+    # text1 = text[index_start:index_end]
+    # text1 = text.replace('/.webp','')
+    # print(text1)
+    # text3 = text2.title()
+    # id += 1
+    # print(text1)
+    # db.execute(f"INSERT INTO product_temp VALUES('{id}','{text3}');")
+    # os.remove(file)
+
+
+# image = Image.open("static/images/milk.png")
+# image.resize((200,200)).save("static/images/milk_200.png")
+
 
 
 @app.after_request
@@ -331,3 +364,8 @@ def add_address():
         flash(f"New address has been added")
         return redirect("/cart")
     return render_template("address.html", user_data=user_data, address=address)
+
+
+
+# if __name__ == '__main__':
+#     app.run(host='192.168.1.11',port=5000)

@@ -42,34 +42,35 @@ final project:
 			(*) P&L: Payment received, Refund issued, total available _cash
 		
 	data structure:
-		users: user_id, name, email, phone, hash, cash
+			users: user_id, name, email, phone, hash, cash
 		inventory: product_id, stock qty
 		transactions: tran_id, user_id, tran_type (order_payment/ order_refund/ add_fund), datetime, tran_status(deafult: success)
 		orders: order_id: #, user_id: #, datetime: #, order_details: {product_id: #; order_qty: #}, order_status: received/deilvered, address
-		products: product_id, category, product_name, desc, image, price, discount
-		carts: (user_id, cart_items({product_id: 1; qty:1, price:20},{product_id: 2; qty:3, price:30})) 
-		address: user_id, address:{address_1:{Flat/building:#; Town: #; State: #, Pin: #}}, primary: #
+			products: product_id, category, product_name, desc, image, price, discount
+			carts: (user_id, cart_items({product_id: 1; qty:1, price:20},{product_id: 2; qty:3, price:30})) 
+			address: user_id, address:{address_1:{Flat/building:#; Town: #; State: #, Pin: #}}, primary: #
 
 	header:
-		logo,  account balance, name|profile
+			logo,  account balance, name|profile
 		top 3 categories(*), search
 	
 	user_module_routes:
-		/
-		/user_register
-		/user_login
-		/user_logout
+			/
+			/user_register
+			/user_login
+			/user_logout
 		(*)/product page
 		/search
-		/cart
+			/cart
+			/add_to_cart
 		/order_confirmation
 		/profile
-		/profile/cash
+			/add_fund
 		/profile/orders
 		/profile/addresses
 
 	client_module_routes:
-		/ (order dashboard(order received), stock dashboard(available stocks/ out of stock)
+		/(order dashboard(order received), stock dashboard(available stocks/ out of stock)
 		/client_orders (update order_status)
 		/client_inventory (update stocks => product_id, stock qty)
 		/client_p&l ((*)update cash)
