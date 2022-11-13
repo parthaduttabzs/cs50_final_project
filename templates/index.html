@@ -19,7 +19,7 @@
 {% block main%}
     <!-- search bar -->
     <div class="container mt-3">
-        <form class="row g-3">
+        <form class="row g-3" action="/search" method="post">
             <div class="col-lg-10 col-8">
                 <input class="form-control me-2" autocomplete = "on" autofocus name="search" type="text" placeholder="Search"aria-label="Search">
             </div>
@@ -38,32 +38,43 @@
                           Sort by
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
-                          <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
-                          <li><a class="dropdown-item" href="#">Relevance</a></li>
-                          <li><hr class="dropdown-divider"></li>
-                          <li><a class="dropdown-item" href="#">Reset</a></li>
+                            <li><a class="dropdown-item" onclick="sort('price','False')">Price: Low to High</a></li>
+                            <li><a class="dropdown-item" onclick="sort('price','True')">Price: High to Low</a></li>
+                            <li><a class="dropdown-item" onclick="sort('discount','True')">Offers</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" onclick="sort('product_id','False')">Reset</a></li>
                         </ul>
-                    </div>
-                    <!-- Filter by -->
+                </div>
+                <form action="/" method="post" id="sort_form">
+                    <input hidden name="sort_by" id="sort_by" value="">
+                    <input hidden name="sort_direction" id="sort_direction" value="">
+                </form>
+            <!-- Filter by -->
                     <div class="tools dropdown">
                         <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                           Filter by
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                          <li><a class="dropdown-item" href="#">Fruits</a></li>
-                          <li><a class="dropdown-item" href="#">Grocery</a></li>
-                          <li><a class="dropdown-item" href="#">Vegetables</a></li>
+                          <li><a class="dropdown-item" >Fruits</a></li>
+                          <li><a class="dropdown-item">Grocery</a></li>
+                          <li><a class="dropdown-item">Vegetables</a></li>
                           <li><hr class="dropdown-divider"></li>
-                          <li><a class="dropdown-item" href="#">Clear Filters</a></li>
+                          <li><a class="dropdown-item">Reset Filters</a></li>
                         </ul>
-                    </div>            
+                    </div>
+                    <!-- <form action="/" method="post" id="filter_form">
+                        <input hidden name="filter_by" id="filter_by" value="">
+                    </form>             -->
                 </div>
             </div>
         </div>
         <div class="container gx-1">
             <div class="stack">
-                {% for i in product_data %}
+                <!-- {{ sort_by }}
+                {{ sort_direction }} -->
+                <!-- {{ filter_by }} -->
+                {% set sort_dir = sort_direction[0]['reverse'] %}
+                {% for i in product_data | sort(attribute=sort_by, reverse=sort_dir) %}
                 <div class="container shadow bg-body" style="border-radius:0.6rem" id="card">
                     <div class="row mb-3 py-3 align-items-center">
                         <div class="col-lg-3 col-4">
@@ -150,6 +161,14 @@
                     document.getElementById('cart_bar').style.display = 'none';
                 }
             });
+
+            function sort(sort_elem, sort_rev) {
+                console.log(sort_elem)
+                console.log(sort_rev)
+                document.getElementById('sort_by').value = sort_elem;
+                document.getElementById('sort_direction').value = (sort_rev);
+                document.getElementById('sort_form').submit();
+            };
 
         </script>
     {% endblock %}

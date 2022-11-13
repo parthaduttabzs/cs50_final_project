@@ -122,7 +122,7 @@ def password_strength(password):
         return True
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
     user_id = session["user_id"]
@@ -131,7 +131,20 @@ def index():
     cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
     cart = cart[0]['cart_items']
     cart = json.loads( cart )
-    return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart)
+    # filter_by = ['Grocery','Fruits','Vegetables']
+    sort_by = ''
+    sort_direction = [{'reverse':False}]
+    if request.method=="POST":
+        if request.form.get("sort_by"):
+            sort_by = request.form.get("sort_by")
+        if request.form.get("sort_direction") == 'True':
+            sort_direction[0]['reverse'] = True
+            sort_direction=(sort_direction)
+        # if request.form.get("filter_by"):
+        #     filter_by.clear()
+        #     filter_by.append(request.form.get("filter_by"))
+        return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart, sort_by=sort_by, sort_direction=sort_direction)
+    return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart, sort_by=sort_by, sort_direction=sort_direction)
 
 
 def error(message, code=400):
@@ -291,7 +304,7 @@ def add_to_cart():
     if request.method == "POST":
         product_id = request.form.get("product_id")
         qty = int(request.form.get("qty"))
-        if qty < 0:
+        if qty <= 0:
             return error("Please enter valid inputs", 400)
         # price = request.form.get("price")
         for i in cart:
@@ -427,3 +440,27 @@ def account():
     address = address[0]['address']
     address = json.loads(address)
     return render_template("account.html", user_data=user_data, address=address)
+
+
+@app.route("/search", methods=["GET", "POST"])
+@login_required
+def search():
+    user_id = session["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
+    cart = cart[0]['cart_items']
+    cart = json.loads( cart )
+    # filter_by = ['Grocery','Fruits','Vegetables']
+    sort_by = ''
+    sort_direction = [{'reverse':False}]
+    if request.method=="POST":
+        if request.form.get("search"):
+            keyword = request.form.get("search").lower()
+            keyword = '%'+keyword+'%'
+            product_data = db.execute(f"SELECT * FROM products WHERE lower(product_name) LIKE '{keyword}';")
+        else:
+            return error("Please enter valid search input")            
+    
+        return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart, sort_by=sort_by, sort_direction=sort_direction)
+    return redirect("/")
+
