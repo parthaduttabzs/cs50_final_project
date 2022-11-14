@@ -44,31 +44,31 @@
             </div>
             <div class="form-check" id="filter_form">
                 <div class="tools dropdown">
-                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="filter_menu" data-bs-toggle="dropdown" aria-expanded="false">
                         Filter by
                     </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
                             <li class='dropdown-item'>
                             <div class="form-check">
-                                <input class="form-check-input" value="fruits" type="checkbox" id="fruits">
+                                <input class="form-check-input" value="fruits" type="checkbox" id="Fruits">
                                 <label class="form-check-label" for="fruits">Fruits</label>    
                             </div>
                         </li>
                         <li class='dropdown-item'>
                             <div class="form-check">
-                                <input class="form-check-input" value="grocery" type="checkbox" id="grocery">
+                                <input class="form-check-input" value="grocery" type="checkbox" id="Grocery">
                                 <label class="form-check-label" for="grocery">Grocery</label>    
                             </div>
                         </li>
                         <li class='dropdown-item'>
                             <div class="form-check">
-                                <input class="form-check-input" value="vegetables" type="checkbox" id="vegetables">
+                                <input class="form-check-input" value="vegetables" type="checkbox" id="Vegetables">
                                 <label class="form-check-label" for="vegetables">Vegetables</label>    
                             </div>
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li class='dropdown-item'>
-                            <button class="btn btn-success" type="submit" value="submit" onsubmit="filtered()">Apply Filter</button>
+                            <input class="btn btn-success" type="submit" id="apply_filter" value="Apply Filter""></input>
                         </li>
                     </ul>                
                 </div>
@@ -77,7 +77,7 @@
     </div>
 </div>
 <!-- {{ cart }} -->
-<!-- {{ product_data }} -->
+{{ product_array }}
 <div class="container gx-1">
     <div class="stack" id="product_cards">
         <!-- space for product cards -->
@@ -113,7 +113,8 @@
         // console.log(element.id+'_qty')
         id = element.id+'_qty';
         document.getElementById(id).value = clicks;
-    };
+    };     
+
     // calculation for footer cart bar
     $(document).ready(function () {                    
         var cart_array = {{ cart|tojson }};
@@ -135,12 +136,33 @@
 
         cart();
         
-        // function filtered(){
-        //     console.log('filter_click');
-        // };
+        var product_array = {{ product_data|tojson }};
+        var product_filtered = product_array;
         
-        const product_array = {{ product_data|tojson }};
+        document.getElementById("apply_filter").addEventListener("click", function filtered() {
+            let full_list = ['Fruits','Grocery','Vegetables'];
+            let len = full_list.length;
+            let filter_list = [];
+            for (let i = 0; i < len; i++) {
+                if (document.querySelector("#"+full_list[i]+":checked")){
+                    filter_list.push(full_list[i]);
+                };
+            };
+            document.getElementById('filter_menu').innerHTML='Filter['+filter_list.length+']';
+            document.getElementById('filter_menu').style.backgroundColor = '#198754';
+            document.getElementById('filter_menu').style.color = '#ffffff';
+            if (filter_list.length == 0){
+                    filter_list = full_list;
+                    document.getElementById('filter_menu').innerHTML='Filter by';
+                    document.getElementById('filter_menu').style.backgroundColor = '#f8f9fa';
+                    document.getElementById('filter_menu').style.color = '#000000';
 
+                };
+            product_filtered = product_array.filter(product => filter_list.includes(product.category));
+            product_sorted = product_filtered;
+            fill_container();
+        });
+        
         function fill_container() {
             var container = document.getElementById("product_cards");
             container.innerHTML='';
@@ -199,6 +221,13 @@
                 document.getElementById('dropdownMenuButton1').innerHTML = 'Price (Low to High)';
                 document.getElementById('dropdownMenuButton1').style.backgroundColor = '#198754';
                 document.getElementById('dropdownMenuButton1').style.color = '#ffffff';
+                document.getElementById('filter_menu').innerHTML = 'Filter by';
+                document.getElementById('filter_menu').style.backgroundColor = '#f8f9fa';
+                document.getElementById('filter_menu').style.color = '#000000';
+                document.getElementById('Fruits').checked = false;
+                document.getElementById('Grocery').checked = false;
+                document.getElementById('Vegetables').checked = false;
+
         });
         document.getElementById('price_hl').addEventListener('click', function(){
             product_sorted = product_array.sort(function(first, second) {
