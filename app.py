@@ -437,7 +437,6 @@ def search():
     cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
     cart = cart[0]['cart_items']
     cart = json.loads( cart )
-    # filter_by = ['Grocery','Fruits','Vegetables']
     sort_by = ''
     sort_direction = [{'reverse':False}]
     if request.method=="POST":
@@ -446,10 +445,49 @@ def search():
             keyword = '%'+keyword+'%'
             word = keyword.replace('%','')
             product_data = db.execute(f"SELECT * FROM products WHERE lower(product_name) LIKE '{keyword}';")
-            flash(f"Showing result for: {word}")
+            flash(f"Showing search results for: {word}")
         else:
             return error("Please enter valid search input")            
     
         return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart, sort_by=sort_by, sort_direction=sort_direction)
     return redirect("/")
 
+@app.route("/change_password", methods=["GET", "POST"])
+@login_required
+def change_password():
+    # get user data
+    user_id = session["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    # if user has placed a change password request
+    if request.method == "POST":
+        user_id = session["user_id"]
+        password = request.form.get("password")
+        confirmation = request.form.get("confirmation")
+        if password == confirmation:
+            # if not password_strength(password):
+            #     return error("password needs to be atleast 6 character, with min 1 upper, 1 lower, 1 digit and 1 special ('@', '#', '_') character", 403)
+            hash = generate_password_hash(request.form.get("password"))
+            db.execute(f"UPDATE users SET hash = ? WHERE user_id = ?", hash, user_id)
+            flash("Your password has been changed successfully")
+            return redirect("/")
+        else:
+            error = "Password Mismatch"
+            return render_template("change_password.html", error=error, user_data=user_data)
+    # if user is just visiting change password
+    return render_template("change_password.html", user_data=user_data)
+
+
+@app.route("/transactions")
+@login_required
+def transctions():
+    """Show history of transactions"""
+    # get user data
+    user_id = session["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    # get all transaction details of the user
+    transactions = db.execute("SELECT * FROM transactions WHERE user_id = ?", user_id)
+    # derive date and time data from datetime in transactions
+    for i in transactions:
+        i["date"] = datetime.datetime.strptime(i["datetime"], '%Y-%m-%d %H:%M:%S').date()
+        i["time"] = datetime.datetime.strptime(i["datetime"], '%Y-%m-%d %H:%M:%S').time()
+    return render_template("transactions.html", transactions=transactions, user_data=user_data)

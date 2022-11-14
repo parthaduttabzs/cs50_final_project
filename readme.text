@@ -21,11 +21,11 @@ final project:
 			cart module: add to cart, delete from cart
 			order confirmation: select address, expected delivery timeline, order cofirmation
 			profile:
-				cash:
+					cash:
 					add_fund
-				order:
+					order:
 					order_list
-				address:
+					address:
 					list of addresses
 					add address
 					(*) modify address
@@ -44,8 +44,8 @@ final project:
 	data structure:
 			users: user_id, name, email, phone, hash, cash
 		inventory: product_id, stock qty
-		transactions: tran_id, user_id, tran_type (order_payment/ order_refund/ add_fund), datetime, tran_status(deafult: success)
-		orders: order_id: #, user_id: #, datetime: #, order_details: {product_id: #; order_qty: #}, order_status: received/deilvered, address
+			transactions: tran_id, user_id, tran_type (order_payment/ order_refund/ add_fund), datetime, tran_status(deafult: success)
+			orders: order_id: #, user_id: #, datetime: #, order_details: {product_id: #; order_qty: #}, order_status: received/deilvered, address
 			products: product_id, category, product_name, desc, image, price, discount
 			carts: (user_id, cart_items({product_id: 1; qty:1, price:20},{product_id: 2; qty:3, price:30})) 
 			address: user_id, address:{address_1:{Flat/building:#; Town: #; State: #, Pin: #}}, primary: #
@@ -60,14 +60,14 @@ final project:
 			/user_login
 			/user_logout
 		(*)/product page
-		/search
+			/search
 			/cart
 			/add_to_cart
-		/order_confirmation
-		/profile
+			/order_confirmation
+			/profile
 			/add_fund
-		/profile/orders
-		/profile/addresses
+			/profile/orders
+			/profile/addresses
 
 	client_module_routes:
 		/(order dashboard(order received), stock dashboard(available stocks/ out of stock)

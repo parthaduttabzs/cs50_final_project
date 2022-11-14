@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Transactions
+{% endblock %}
+
+{% block user %}
+    {{ user_data[0]["name"] }}
+{% endblock %}
+
+{% block fund %}
+    Fund: {{ user_data[0]["cash"] }}
+{% endblock %}
+
+{% block cart %}
+    {{ cart|length }}
+{% endblock %}
+
+{% block main %}
+    
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>TRANSACTION ID</th>
+            <th>DATE</th>
+            <th>TIME</th>
+            <th>TRANSACTION TYPE</th>
+            <th>AMOUNT</th>
+            <th>TRANSACTION STATUS</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in transactions %}
+        <tr>
+            <td>{{ i["tran_id"] }}</td>
+            <td>{{ i["date"] }}</td>
+            <td>{{ i["time"] }}</td>
+            <td>{{ i["tran_type"] }}</td>
+            <td>{{ i["amount"] }}</td>
+            <td>{{ i["tran_status"] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
