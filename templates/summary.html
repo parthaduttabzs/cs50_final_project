@@ -104,27 +104,30 @@
             <!-- </div> -->
         </div>
     </div>
-    <!-- <footer> -->
-        <div class="col-lg-12 col-12 mt-3 mb-5 d-grid justify-content-center" id="add_fund">
-            <form action="/orders" method="post">
-                <input hidden name="address_selected" value='{{ address }}'>
-                <input hidden name="order_amount" id="order_amount" value=''>
-                <button id="confirm_order" class=" float btn btn-primary">
-                    Confirm Order
-                </button></a>
-            </form>
-        </div>
-    <!-- </footer> -->
+    <div class="col-lg-12 col-12 mt-3 mb-5 d-grid justify-content-center" id="add_fund">
+        <form action="/orders" method="post">
+            <input hidden name="address_selected" value='{{ address }}'>
+            <input hidden name="order_amount" id="order_amount" value=''>
+            <button id="confirm_order" class=" float btn btn-primary">
+                Confirm Order
+            </button></a>
+        </form>
+    </div>
+    <!-- <div>
+        <p>text</p>
+        <p>text</p>
+        <p>text</p>
+    </div> -->
     <script>
         let total_amount = 0;
         {% for i in cart %}
-            console.log({{ i["amount"] }})
+            // console.log({{ i["amount"] }})
             total_amount += ({{ i["amount"] }});
         {% endfor %}
         document.getElementById("total_amount").innerHTML = total_amount;
         document.getElementById("order_amount").value = total_amount;
         cash_available = parseInt({{ user_data[0]["cash"] }});
-        console.log(cash_available);
+        // console.log(cash_available);
         if (cash_available < total_amount) {
             document.getElementById("confirm_order").disabled = true;
             document.getElementById("add_fund").style.display = 'block';

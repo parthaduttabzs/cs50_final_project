@@ -17,162 +17,216 @@
 {% endblock %}
 
 {% block main%}
-    <!-- search bar -->
-    <div class="container mt-3">
-        <form class="row g-3" action="/search" method="post">
-            <div class="col-lg-10 col-8">
-                <input class="form-control me-2" autocomplete = "on" autofocus name="search" type="text" placeholder="Search"aria-label="Search">
+<div class="container mt-3">
+    <form class="row g-3" action="/search" method="post">
+        <div class="col-lg-10 col-8">
+            <input class="form-control me-2" autocomplete = "on" required autofocus name="search" type="text" placeholder="Search"aria-label="Search">
+        </div>
+        <div class="d-grid col-lg-2 col-4 mx-auto">
+            <button class="btn btn-outline-success" name="submit" type="submit">Search</button>
+        </div>
+    </form>
+</div>     
+<div class="container">
+    <div class="col align-self-end">
+        <div class="btn-group">
+            <div class="tools dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Sort by
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" id= 'price_lh'>Price: Low to High</a></li>
+                    <li><a class="dropdown-item" id= 'price_hl'>Price: High to Low</a></li>
+                    <li><a class="dropdown-item" id= 'discount'>Offers</a></li>
+                    <li><hr class="dropdown-divide"></li>
+                    <li><a class="dropdown-item" id='product_id'>Reset</a></li>
+                </ul>
             </div>
-            <div class="d-grid col-lg-2 col-4 mx-auto">
-                <button class="btn btn-outline-success" name="submit" type="submit">Search</button>
-            </div>
-        </form>
-    </div>     
-    <!-- Sort by/ Filter by -->
-        <div class="container">
-            <div class="col align-self-end">
-                <div class="btn-group">
-                    <!-- sort by -->
-                    <div class="tools dropdown">
-                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                          Sort by
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" onclick="sort('price','False')">Price: Low to High</a></li>
-                            <li><a class="dropdown-item" onclick="sort('price','True')">Price: High to Low</a></li>
-                            <li><a class="dropdown-item" onclick="sort('discount','True')">Offers</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" onclick="sort('product_id','False')">Reset</a></li>
-                        </ul>
-                </div>
-                <form action="/" method="post" id="sort_form">
-                    <input hidden name="sort_by" id="sort_by" value="">
-                    <input hidden name="sort_direction" id="sort_direction" value="">
-                </form>
-            <!-- Filter by -->
-                    <div class="tools dropdown">
-                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                          Filter by
-                        </button>
+            <div class="form-check" id="filter_form">
+                <div class="tools dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Filter by
+                    </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                          <li><a class="dropdown-item" >Fruits</a></li>
-                          <li><a class="dropdown-item">Grocery</a></li>
-                          <li><a class="dropdown-item">Vegetables</a></li>
-                          <li><hr class="dropdown-divider"></li>
-                          <li><a class="dropdown-item">Reset Filters</a></li>
-                        </ul>
-                    </div>
-                    <!-- <form action="/" method="post" id="filter_form">
-                        <input hidden name="filter_by" id="filter_by" value="">
-                    </form>             -->
+                            <li class='dropdown-item'>
+                            <div class="form-check">
+                                <input class="form-check-input" value="fruits" type="checkbox" id="fruits">
+                                <label class="form-check-label" for="fruits">Fruits</label>    
+                            </div>
+                        </li>
+                        <li class='dropdown-item'>
+                            <div class="form-check">
+                                <input class="form-check-input" value="grocery" type="checkbox" id="grocery">
+                                <label class="form-check-label" for="grocery">Grocery</label>    
+                            </div>
+                        </li>
+                        <li class='dropdown-item'>
+                            <div class="form-check">
+                                <input class="form-check-input" value="vegetables" type="checkbox" id="vegetables">
+                                <label class="form-check-label" for="vegetables">Vegetables</label>    
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li class='dropdown-item'>
+                            <button class="btn btn-success" type="submit" value="submit" onsubmit="filtered()">Apply Filter</button>
+                        </li>
+                    </ul>                
                 </div>
             </div>
         </div>
-        <div class="container gx-1">
-            <div class="stack">
-                <!-- {{ sort_by }}
-                {{ sort_direction }} -->
-                <!-- {{ filter_by }} -->
-                {% set sort_dir = sort_direction[0]['reverse'] %}
-                {% for i in product_data | sort(attribute=sort_by, reverse=sort_dir) %}
-                <div class="container shadow bg-body" style="border-radius:0.6rem" id="card">
-                    <div class="row mb-3 py-3 align-items-center">
-                        <div class="col-lg-3 col-4">
-                            <image alt="image" src={{ i['image'] }}></image>
-                        </div>
-                        <div class="col-lg-5 col-4" style="text-overflow:ellipsis">
-                            <h5>{{ i["product_name"] }}</h5>
-                            <small>{{ i["category"] }}</small><br>
-                            <small>{{ i["desc"] }}</small>
-                            <h5>Rs. {{ i["price"] }} <p><span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;">&nbsp {{ i["discount"]|percent }} off &nbsp</span></p></h5>
-                        </div>
-                        <div class="col-lg-3 col-3">
-                            <form action="/add_to_cart" method="post">
-                                <!-- qty -->
-                                <div class="row">
-                                    <input class = "form-control form-control-sm mt-2" required type="number" name="qty" id={{ i['product_id'] }}_qty placeholder="qty">
-                                </div>
-                                <!-- counter -->
-                                <div class="row">
-                                    <div class="col d-grid">
-                                        <button class="btn btn-sm btn-outline-secondary mt-2" type="button" id={{ i['product_id'] }} onclick='counter(this, "remove")'>-1</button>
-                                    </div>
-                                    <div class="col d-grid">
-                                        <button class="btn btn-sm btn-outline-secondary mt-2" type="button" id={{ i['product_id'] }} onclick='counter(this, "add")''>+1</button>    
-                                    </div>
-                                </div>
-                                <!-- Add to cart -->
-                                <input  hidden name="product_id" value={{ i['product_id'] }}>
-                                <div class="row d-grid">
-                                    <button class="btn btn-sm btn-success mt-2 mb-2" type="submit"><small>Add to Cart</small></button>
-                                </div>    
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="float_container" id="cart_bar">
-            <div id="go_to_cart" class="container" style="background-color:#5DA7DB">
-                <div class="navbar">
-                    <div class="nav-items" id = "cart_qty" style="color:#ffffff">
-
-                    </div>
-                    <div class="nav-items" id = "cart_amount" style="color:#ffffff">
-                        
-                    </div>
-                    <div class="nav-items">
-                        <form action="/cart" method="get">
-                            <button class="btn btn-primary" type="submit">Go to Cart</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script>
-            let clicks = 0;
-            function counter(element, mode) {
-                if (mode === "add") {
-                    clicks = Math.max(clicks, 0) + 1;
-                    // console.log(clicks);
-                } else {
-                    clicks = Math.max(clicks, 1) - 1;
-                    // console.log(clicks);
-                }
-                console.log(element.id+'_qty')
-                id = element.id+'_qty';
-                document.getElementById(id).value = clicks;
-            }
-                // calculation for footer cart bar
-            $(document).ready(function () {                    
-                let cart_qty = 0;
-                let cart_amount = 0;
-                let amount = 0;
-                {% for i in cart %}
-                    cart_qty += parseInt({{ i['qty'] }});
-                    amount = parseInt({{ i['qty'] }}) * parseInt({{ i['price'] }});
-                    cart_amount += amount;
-                {% endfor %}
-                document.getElementById('cart_qty').innerHTML = 'Items added\:<br>' + cart_qty;
-                document.getElementById('cart_amount').innerHTML = 'Cart amount\:<br>' + 'Rs. '+cart_amount;
-                
-                if (cart_qty === 0) {
-                    document.getElementById('cart_bar').style.display = 'none';
-                }
-            });
-
-            function sort(sort_elem, sort_rev) {
-                console.log(sort_elem)
-                console.log(sort_rev)
-                document.getElementById('sort_by').value = sort_elem;
-                document.getElementById('sort_direction').value = (sort_rev);
-                document.getElementById('sort_form').submit();
-            };
-
-        </script>
-    {% endblock %}
-    
-        
-
     </div>
+</div>
+<!-- {{ cart }} -->
+<!-- {{ product_data }} -->
+<div class="container gx-1">
+    <div class="stack" id="product_cards">
+        <!-- space for product cards -->
+    </div>
+</div>
+<div class="float_container" id="cart_bar" style="display:none">
+    <div id="go_to_cart" class="container" style="background-color:#54B435">
+        <div class="navbar">
+            <div class="nav-items" id = "cart_qty" style="color:#ffffff">
+
+            </div>
+            <div class="nav-items" id = "cart_amount" style="color:#ffffff">
+                
+            </div>
+            <div class="nav-items">
+                <form action="/cart" method="get">
+                    <button class="btn btn-light" type="submit">Go to Cart</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let clicks = 0;
+    function counter(element, mode) {
+        if (mode === "add") {
+            clicks = Math.max(clicks, 0) + 1;
+            // console.log(clicks);
+        } else {
+            clicks = Math.max(clicks, 1) - 1;
+            // console.log(clicks);
+        }
+        // console.log(element.id+'_qty')
+        id = element.id+'_qty';
+        document.getElementById(id).value = clicks;
+    };
+    // calculation for footer cart bar
+    $(document).ready(function () {                    
+        var cart_array = {{ cart|tojson }};
+        function cart(){
+            let cart_qty = 0;
+            let cart_amount = 0;
+            let amount = 0;
+            cart_array.forEach((i) => {
+                cart_qty += i.qty;
+                amount = i.qty * i.price;
+                cart_amount += amount;
+            });
+            document.getElementById('cart_qty').innerHTML = 'Items added\:<br>' + cart_qty;
+            document.getElementById('cart_amount').innerHTML = 'Cart amount\:<br>' + 'Rs. '+cart_amount;
+            if (cart_qty > 0) {
+                document.getElementById('cart_bar').style.display = 'block';
+            };
+        };
+
+        cart();
+        
+        // function filtered(){
+        //     console.log('filter_click');
+        // };
+        
+        const product_array = {{ product_data|tojson }};
+
+        function fill_container() {
+            var container = document.getElementById("product_cards");
+            container.innerHTML='';
+            product_sorted.forEach((i) => {
+                const card = document.createElement('div');
+                card.classList = 'card-body';
+                
+                const content = `
+                    <div class="container shadow bg-body" style="border-radius:0.6rem;" id="card${i.product_id}">
+                        <div class="row mb-3 py-3 align-items-center">
+                            <div class="col-lg-3 col-4">
+                                <image alt="image" src=${i.image}></image>
+                            </div>
+                            <div class="col-lg-5 col-4" style="text-overflow:ellipsis">
+                                <h5 id="product_name">${i.product_name}</h5>
+                                <small id="category">${i.category}</small><br>
+                                <small id="desc">${i.desc}</small>
+                                <h5 id="price">${i.price}<p><span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;">&nbsp ${i.discount} off &nbsp</span></p></h5>
+                            </div>
+                            <div class="col-lg-3 col-3">
+                                <form action="/add_to_cart" method="post">
+                                    <div class="row">
+                                        <input class = "form-control form-control-sm mt-2" required type="number" name="qty" id=${i.product_id}_qty placeholder="qty">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col d-grid">
+                                            <button class="btn btn-sm btn-outline-secondary mt-2" type="button" id=${i.product_id} onclick='counter(this, "remove")'>-1</button>
+                                        </div>
+                                        <div class="col d-grid">
+                                            <button class="btn btn-sm btn-outline-secondary mt-2" type="button" id=${i.product_id} onclick='counter(this, "add")'>+1</button>    
+                                        </div>
+                                    </div>
+                                    <input  hidden name="product_id" value = "${i.product_id}">
+                                    <div class="row d-grid">
+                                        <button class="btn btn-sm btn-success mt-2 mb-2" type="submit"><small>Add to Cart</small></button>
+                                    </div>    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += content;
+
+            });
+        };
+        // console.log(product_array)
+        product_sorted = product_array;
+        fill_container()
+    
+
+        document.getElementById('price_lh').addEventListener('click', function(){
+            product_sorted = product_array.sort(function(first, second) {
+                return first.price - second.price;
+                });
+                fill_container();
+                document.getElementById('dropdownMenuButton1').innerHTML = 'Price (Low to High)';
+                document.getElementById('dropdownMenuButton1').style.backgroundColor = '#198754';
+                document.getElementById('dropdownMenuButton1').style.color = '#ffffff';
+        });
+        document.getElementById('price_hl').addEventListener('click', function(){
+            product_sorted = product_array.sort(function(first, second) {
+                return second.price - first.price;
+                });
+                fill_container();
+                document.getElementById('dropdownMenuButton1').innerHTML = 'Price (High to Low)';
+                document.getElementById('dropdownMenuButton1').style.backgroundColor = '#198754';
+                document.getElementById('dropdownMenuButton1').style.color = '#ffffff';
+        });
+        document.getElementById('discount').addEventListener('click', function(){
+            product_sorted = product_array.sort(function(first, second) {
+                return second.discount - first.discount;
+                });
+                fill_container();
+                document.getElementById('dropdownMenuButton1').innerHTML = 'Sorted by Offers';
+                document.getElementById('dropdownMenuButton1').style.backgroundColor = '#198754';
+                document.getElementById('dropdownMenuButton1').style.color = '#ffffff';
+        });
+        document.getElementById('product_id').addEventListener('click', function(){
+            product_sorted = product_array.sort(function(first, second) {
+                return first.product_id - second.product_id;
+                });
+                fill_container();
+                document.getElementById('dropdownMenuButton1').innerHTML = 'Sort by';
+                document.getElementById('dropdownMenuButton1').style.backgroundColor = '#f8f9fa';
+                document.getElementById('dropdownMenuButton1').style.color = '#000000';
+        });
+    });
+</script>
+{% endblock %}

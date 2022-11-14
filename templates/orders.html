@@ -28,7 +28,7 @@
         {% for i in order_details|sort(attribute='order_id', reverse=True) %}
             <div class="container shadow bg-body mt-3 mb-3 " style="border-radius:0.6rem">
                 <div class="row align-items-center">
-                    <div class="col-lg-8 col-8 py-3">
+                    <div class="col-lg-6 col-8 py-3">
                         <div class="row">
                             <h5>Order ID: #{{ i["order_id"] }}</h5>
                         </div>
@@ -42,10 +42,10 @@
                             <small>Order Amount: Rs. {{ i["order_amount"] }}</small>
                         </div>
                         <div class="row">
-                            <small>Order Status: {{ i["order_status"] }}</small>
+                            <small>Order Status: <span style="color: #379237; font-weight: bold;"> {{ i["order_status"] }}</span></small>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-4 d-grid justify-content-around">
+                    <div class="col-lg-6 col-4 d-grid justify-content-around">
                         <form action="/view_order" method="post">
                             <input hidden id={{ i["order_id"] }} name="order_id" value={{ i["order_id"] }}>
                             <button class="btn btn-outline-primary btn-sm">View Details</button>

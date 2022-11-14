@@ -131,20 +131,7 @@ def index():
     cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
     cart = cart[0]['cart_items']
     cart = json.loads( cart )
-    # filter_by = ['Grocery','Fruits','Vegetables']
-    sort_by = ''
-    sort_direction = [{'reverse':False}]
-    if request.method=="POST":
-        if request.form.get("sort_by"):
-            sort_by = request.form.get("sort_by")
-        if request.form.get("sort_direction") == 'True':
-            sort_direction[0]['reverse'] = True
-            sort_direction=(sort_direction)
-        # if request.form.get("filter_by"):
-        #     filter_by.clear()
-        #     filter_by.append(request.form.get("filter_by"))
-        return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart, sort_by=sort_by, sort_direction=sort_direction)
-    return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart, sort_by=sort_by, sort_direction=sort_direction)
+    return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart)
 
 
 def error(message, code=400):
@@ -310,7 +297,7 @@ def add_to_cart():
         for i in cart:
             if i['product_id'] == product_id:
                 i['qty'] = int(i['qty']) + (qty)
-                db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart))
+                db.execute("UPDATE carts SET cart_items = ?;", json.loads(cart))
                 flash(f"cart has been updated")
                 return redirect("/")
         new = {}
@@ -457,7 +444,9 @@ def search():
         if request.form.get("search"):
             keyword = request.form.get("search").lower()
             keyword = '%'+keyword+'%'
+            word = keyword.replace('%','')
             product_data = db.execute(f"SELECT * FROM products WHERE lower(product_name) LIKE '{keyword}';")
+            flash(f"Showing result for: {word}")
         else:
             return error("Please enter valid search input")            
     
