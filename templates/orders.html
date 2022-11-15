@@ -25,6 +25,7 @@
                 <h5>My Orders: </h5>
             </div>
         </div>
+        <!-- {{order_details}} -->
         {% for i in order_details|sort(attribute='order_id', reverse=True) %}
             <div class="container shadow bg-body mt-3 mb-3 " style="border-radius:0.6rem">
                 <div class="row align-items-center">

@@ -1,0 +1,5 @@
+-- SELECT * FROM carts;
+-- SELECT * FROM carts;
+SELECT * FROM carts WHERE user_id = '4';
+
+SELECT COLUMN_NAME, DATA_TYPE,CHARACTER_MAXIMUM_LENGTH FROM information_schema.columns WHERE TABLE_NAME = 'YOUR_TABLE_NAME'

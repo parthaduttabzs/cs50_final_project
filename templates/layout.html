@@ -18,7 +18,7 @@
 <body>
     <!-- fixed header -->
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #eaffe3;">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -38,7 +38,10 @@
                             <a class="nav-link" aria-current="page" href="/add_fund">{% block fund %}{% endblock %}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="/cart">Cart:[{% block cart %}{% endblock %}]</a>
+                            <a class="nav-link" aria-current="page" href="/cart">
+                                <iconify-icon icon="material-symbols:shopping-cart-outline-rounded" style="color: #0d4c92;"></iconify-icon>
+                                [{% block cart %}{% endblock %}]
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/logout">Logout</a>
@@ -88,7 +91,7 @@
             <div class="col-3">
                 <div class="container">
                     <div class="row justify-content-center">
-                        <a href="/cart"><iconify-icon icon="material-symbols:shopping-cart-rounded" style="color: #0d4c92;"></iconify-icon></a>
+                        <a href="/cart"><iconify-icon icon="material-symbols:shopping-cart-outline-rounded" style="color: #0d4c92;"></iconify-icon></a>
                     </div>
                     <div class="row justify-content-center">Cart[{{cart|length}}]</div>
                 </div>

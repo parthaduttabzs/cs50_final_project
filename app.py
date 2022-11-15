@@ -128,10 +128,10 @@ def index():
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     product_data = db.execute("SELECT * FROM products;")
-    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
-    cart = cart[0]['cart_items']
-    cart = json.loads( cart )
-    return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart)
+    cart = db.execute("SELECT * FROM carts WHERE user_id = ?;", user_id)
+    cart_list = cart[0]['cart_items']
+    cart_list = json.loads(cart_list)
+    return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart_list)
 
 
 def error(message, code=400):
@@ -180,6 +180,8 @@ def register():
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["user_id"]
+        db.execute("INSERT INTO carts (user_id, cart_items) VALUES (?,?);", session["user_id"],'[]')
+        db.execute("INSERT INTO address (user_id, address, primary_address) VALUES (?,?,?);", session["user_id"],'[]', 0)
         flash("You have successfully registered!")
         return redirect("/")
     # if user is visiting register page
@@ -263,13 +265,16 @@ def cart():
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     # get address data of the user
-    address = db.execute("SELECT address FROM address WHERE user_id= ?", f'{user_id}')
+    address = db.execute("SELECT address FROM address WHERE user_id= ?", user_id)
     address = address[0]['address']
     #convert address details in JSON for JINJA
     address = json.loads( address )
     # get cart data of the user
-    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
+    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", user_id)
+    # if cart:
     cart = cart[0]['cart_items']
+    # else:
+    #     cart = []
     cart = json.loads( cart )
     for i in cart:
         prod = db.execute("SELECT * FROM products WHERE product_id = ?;", i["product_id"])
@@ -285,28 +290,27 @@ def cart():
 @login_required
 def add_to_cart():
     user_id = session["user_id"]
-    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
-    cart = cart[0]['cart_items']
-    cart = json.loads( cart )
+    cart = db.execute("SELECT * FROM carts WHERE user_id = ?;", user_id)
     if request.method == "POST":
         product_id = request.form.get("product_id")
         qty = int(request.form.get("qty"))
         if qty <= 0:
             return error("Please enter valid inputs", 400)
-        # price = request.form.get("price")
-        for i in cart:
+        cart_list = cart[0]['cart_items']
+        cart_json = json.loads( cart_list )
+        for i in cart_json:
             if i['product_id'] == product_id:
                 i['qty'] = int(i['qty']) + (qty)
-                db.execute("UPDATE carts SET cart_items = ?;", json.loads(cart))
-                flash(f"cart has been updated")
+                db.execute("UPDATE carts SET cart_items = ? WHERE user_id = ?;", json.dumps(cart_json), user_id)
+                flash(f"Cart has been updated")
                 return redirect("/")
         new = {}
         new['product_id'] = product_id
         new['qty'] = qty
         new['price'] = db.execute("SELECT price FROM products WHERE product_id = ?", product_id)[0]['price']
-        cart.append(new)
-        db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart))
-        flash(f"cart has been updated")
+        cart_json.append(new)
+        db.execute("UPDATE carts SET cart_items = ? WHERE user_id = ?;", json.dumps(cart_json), user_id)
+        flash(f"Cart has been updated")
         return redirect("/")
 
 
@@ -314,17 +318,19 @@ def add_to_cart():
 @login_required
 def remove_from_cart():
     user_id = session["user_id"]
-    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
-    cart = cart[0]['cart_items']
-    cart = json.loads( cart )
-    product_id = request.form.get("product_id")
-    for i in cart:
-        if i['product_id'] == product_id:
-            cart.remove(i)
-            # cart.pop()[i]
-            db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart))
-            flash(f"cart has been updated")
-            return redirect("/cart")
+    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", user_id)
+    cart_list = cart[0]['cart_items']
+    cart_json = json.loads( cart_list )
+    if request.method == "POST":
+        product_id = request.form.get("product_id")
+        for i in cart_json:
+            if i['product_id'] == product_id:
+                cart_json.remove(i)
+                db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart_json))
+                flash(f"Item has been removed from cart")
+                return redirect("/cart")
+    else:
+        return redirect("/cart")
 
 
 @app.route("/summary", methods=["GET", "POST"])
@@ -332,21 +338,25 @@ def remove_from_cart():
 def summary():
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
-    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
-    cart = cart[0]['cart_items']
-    cart = json.loads( cart )
     address = request.form.get('address_selected')
     if len(address) == 0:
         flash("Please select an address for delivery")
         return redirect("/cart")
-    for i in cart:
-        prod = db.execute("SELECT * FROM products WHERE product_id = ?;", i["product_id"])
-        i["product_name"] = prod[0]["product_name"]
-        i["price"] = prod[0]["price"]
-        i["image"] = prod[0]["image"]
-        i["desc"] = prod[0]["desc"]
-        i["amount"] = int(prod[0]["price"]) * int(i["qty"])
-    return render_template("summary.html", cart=cart, user_data=user_data, address=address)
+    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", user_id)
+    if len(cart) == 0:
+        flash("Please select an address for delivery")
+        return redirect("/cart")
+    else:
+        cart_list = cart[0]['cart_items']
+        cart_list = json.loads(cart_list)
+        for i in cart_list:
+            prod = db.execute("SELECT * FROM products WHERE product_id = ?;", i["product_id"])
+            i["product_name"] = prod[0]["product_name"]
+            i["price"] = prod[0]["price"]
+            i["image"] = prod[0]["image"]
+            i["desc"] = prod[0]["desc"]
+            i["amount"] = int(prod[0]["price"]) * int(i["qty"])
+    return render_template("summary.html", cart=cart_list, user_data=user_data, address=address)
 
 
 @app.route("/add_address", methods=["GET", "POST"])
@@ -355,14 +365,14 @@ def add_address():
     # get user data
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
-    address = db.execute("SELECT address FROM address WHERE user_id= ?", f'{user_id}')
+    address = db.execute("SELECT address FROM address WHERE user_id= ?", user_id)
     address = address[0]['address']
     address = json.loads( address )
     if request.method == "POST":
         new = {}
         new['address'] = request.form.get("address")
         address.append(new)
-        db.execute("UPDATE address SET address = ?;", json.dumps(address))
+        db.execute("UPDATE address SET address = ? WHERE user_id = ?;", json.dumps(address), user_id)
         flash(f"New address has been added")
         return redirect("/cart")
     return render_template("address.html", user_data=user_data, address=address)
@@ -375,8 +385,11 @@ def confirm_orders():
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     order_details = db.execute("SELECT * FROM orders WHERE user_id = ?", user_id)
     if request.method == "POST":
-        cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
-        cart = cart[0]['cart_items']
+        cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", user_id)
+        if cart:
+            cart = cart[0]['cart_items']
+        else:
+            cart = '[]'
         cart = json.loads( cart )
         address = request.form.get('address_selected')
         order_amount = request.form.get("order_amount")
@@ -434,8 +447,11 @@ def account():
 def search():
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
-    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", f'{user_id}')
-    cart = cart[0]['cart_items']
+    cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", user_id)
+    if cart:
+        cart = cart[0]['cart_items']
+    else:
+        cart = '[]'
     cart = json.loads( cart )
     sort_by = ''
     sort_direction = [{'reverse':False}]

@@ -35,6 +35,10 @@ display: flex;
   left:0px;
   cursor:pointer;
 }
+#go_to_cart {
+  border-radius: 15px 15px 0px 0px;
+  box-shadow: 0px -1px 10px rgb(141, 184, 184);
+}
 #topbar {
   position: fixed;
   top: 0px;
@@ -44,7 +48,7 @@ display: flex;
 }
 @media screen and (max-width: 480px) {
   .footer_bar {
-    display: block;
+  display: block;
     position:fixed;
     /* height: 100px; */
     bottom: 0px;

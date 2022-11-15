@@ -1,17 +1,34 @@
-text = '204629_16-aashirvaad-select-atta.webp'
-index_start = 0
-index_end = 0
-for i in range(0,len(text)-1,1):
-    if text[i].isalpha():
-        index_start = text.find(text[i])
-        continue
-    if text[i] == ".":
-        index_end = text.find(text[i])
-        break
-text1 = text[index_start:index_end]
-text2 = text1.replace("-"," ")
-text3 = text2.title()
-print(text3)
+import json
+
+
+cart_list = '[{"product_id":3,"qty":2,"price":100}]'
+cart_list = json.loads(cart_list)
+
+# cart = json.loads( cart )
+
+# new = {}
+# new['product_id'] = 4
+# new['qty'] = 1
+# new['price'] = 20 
+
+# cart.append(new)
+
+print((cart_list))
+
+# text = '204629_16-aashirvaad-select-atta.webp'
+# index_start = 0
+# index_end = 0
+# for i in range(0,len(text)-1,1):
+#     if text[i].isalpha():
+#         index_start = text.find(text[i])
+#         continue
+#     if text[i] == ".":
+#         index_end = text.find(text[i])
+#         break
+# text1 = text[index_start:index_end]
+# text2 = text1.replace("-"," ")
+# text3 = text2.title()
+# print(text3)
 
 
 
