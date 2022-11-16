@@ -89,7 +89,12 @@
                   <label class="col-10 form-check-label" id="address_tag" for="firstRadio"> {{ i['address'] }} </label>
                 </li>
                 {% endfor %}
-                <a class="nav-link" href="/add_address">Add new Address</a>
+                <div class="row mt-3">
+                    <form action="/add_address" method="get">
+                        <input hidden name="source" value="cart">
+                        <button class="btn btn-outline-primary" type="submit">Add new Address</button>
+                    </form>
+                </div>
         </div>
         <div class="col-lg-12 col-12 mt-3 mb-5 d-grid justify-content-center" >
             <form action="/summary" method="post">

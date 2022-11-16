@@ -84,7 +84,10 @@
         </div>
         <div class="row">
             <div class="col-lg-2 col-6" id="add_address">
-                <a class="nav-link" href="/add_address">Add new Address</a>
+                <form action="/add_address" method="get">
+                    <input hidden name="source" value="account">
+                    <button class="btn btn-outline-primary" type="submit">Add new Address</button>
+                </form>
             </div>
             <div class="col-lg-2 col-6" id="delete_address">
                 <a class="nav-link"><span style="color:crimson; cursor:pointer"> Delete Address </span></a>
@@ -92,6 +95,7 @@
             <div class="col-lg-2 col-6" id="confirm_delete" style="display: none">
                 <form action="/delete_address" id="delete_address_form" method="post">
                     <input hidden id="addressToDelete" name="address" value="">
+                    <input hidden id="source" name="source" value="account">
                     <button class="btn btn-danger" onclick="delete_address()" id="confirm_delete_button" disabled>Confirm Delete</button>
                 </form>
             </div>

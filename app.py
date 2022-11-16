@@ -369,13 +369,15 @@ def add_address():
     address = address[0]['address']
     address = json.loads( address )
     if request.method == "POST":
+        source = request.form.get("source")
         new = {}
         new['address'] = request.form.get("address")
         address.append(new)
         db.execute("UPDATE address SET address = ? WHERE user_id = ?;", json.dumps(address), user_id)
         flash(f"New address has been added")
-        return redirect("/cart")
-    return render_template("address.html", user_data=user_data, address=address)
+        return redirect(f"/{source}")
+    source = request.args.get("source")
+    return render_template("address.html", user_data=user_data, address=address, source=source)
 
 
 @app.route("/delete_address", methods=["GET", "POST"])
