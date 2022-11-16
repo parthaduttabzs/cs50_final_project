@@ -38,14 +38,14 @@
             </div>
         </div>
         {% for i in cart %}
-            <div class="container gx-0 bg-light">
-                <div class="row bg-light gx-0 mb-3 align-items-center">
-                    <div class="col-lg-6 col-6">
+            <div class="container shadow bg-body mt-3 mb-3" style="border-radius:0.6rem">
+                <div class="row gx-0 py-3 mb-3 align-items-center">
+                    <div class="col-lg-4 col-4">
                         <image alt="image" src={{ i["image"] }}></image>
                     </div>
-                    <div class="col-lg-6 col-6">
-                        <div class="row">
-                            <h5>{{ i["product_name"] }}</h5>
+                    <div class="col-lg-8 col-8 gx-4">
+                        <div class="row" >
+                            <h6 id="product_name">{{ i["product_name"] }}</h6>
                         </div>
                         <div class="row">
                             <small>Qty: {{ i["qty"] }}</small>

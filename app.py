@@ -376,7 +376,7 @@ def add_address():
     address = address[0]['address']
     address = json.loads( address )
     if request.method == "POST":
-        source = request.forms.get("source")
+        source = request.form.get("source")
         new = {}
         new['address'] = request.form.get("address")
         address.append(new)
@@ -499,7 +499,7 @@ def search():
         else:
             return error("Please enter valid search input")            
     
-        return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart, sort_by=sort_by, sort_direction=sort_direction)
+        return render_template("search_result.html", user_data = user_data, product_data=product_data, cart=cart, sort_by=sort_by, sort_direction=sort_direction)
     return redirect("/")
 
 @app.route("/change_password", methods=["GET", "POST"])
