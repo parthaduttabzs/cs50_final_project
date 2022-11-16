@@ -241,6 +241,9 @@ def logout():
 def add_fund():
     # get user data
     user_id = session["user_id"]
+    cart = db.execute("SELECT * FROM carts WHERE user_id = ?;", user_id)
+    cart_list = cart[0]['cart_items']
+    cart_list = json.loads(cart_list)
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     # if user has placed a add fund request
     if request.method == "POST":
@@ -256,7 +259,7 @@ def add_fund():
         return redirect("/")
     # if user is visiting the add fund page
     balance = request.args.get("balance")
-    return render_template("add_fund.html", user_data=user_data, balance=balance)
+    return render_template("add_fund.html", cart=cart_list, user_data=user_data, balance=balance)
 
 
 @app.route("/cart", methods=["GET", "POST"])
@@ -366,6 +369,9 @@ def add_address():
     # get user data
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    cart = db.execute("SELECT * FROM carts WHERE user_id = ?;", user_id)
+    cart_list = cart[0]['cart_items']
+    cart_list = json.loads(cart_list)
     address = db.execute("SELECT address FROM address WHERE user_id= ?", user_id)
     address = address[0]['address']
     address = json.loads( address )
@@ -378,7 +384,7 @@ def add_address():
         flash(f"New address has been added")
         return redirect(f"/{source}")
     source = request.args.get("source")
-    return render_template("address.html", user_data=user_data, address=address, source=source)
+    return render_template("address.html", cart=cart_list, user_data=user_data, address=address, source=source)
 
 
 @app.route("/delete_address", methods=["GET", "POST"])
@@ -404,6 +410,9 @@ def delete_address():
 @login_required
 def confirm_orders():
     user_id = session["user_id"]
+    cart = db.execute("SELECT * FROM carts WHERE user_id = ?;", user_id)
+    cart_list = cart[0]['cart_items']
+    cart_list = json.loads(cart_list)
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     order_details = db.execute("SELECT * FROM orders WHERE user_id = ?", user_id)
     if request.method == "POST":
@@ -438,7 +447,7 @@ def confirm_orders():
         order_details = db.execute("SELECT * FROM orders WHERE user_id = ?", user_id)
         flash("Order has been placed successfully")
         return render_template("orders.html", user_data=user_data, order_details=order_details)
-    return render_template("orders.html", user_data=user_data, order_details=order_details)
+    return render_template("orders.html", cart=cart_list, user_data=user_data, order_details=order_details)
 
 
 @app.route("/view_order", methods=["GET", "POST"])
@@ -456,12 +465,15 @@ def view_orders():
 @login_required
 def account():
     user_id = session["user_id"]
+    cart = db.execute("SELECT * FROM carts WHERE user_id = ?;", user_id)
+    cart_list = cart[0]['cart_items']
+    cart_list = json.loads(cart_list)
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     # get address data of the user
     address = db.execute("SELECT address FROM address WHERE user_id= ?", f'{user_id}')
     address = address[0]['address']
     address = json.loads(address)
-    return render_template("account.html", user_data=user_data, address=address)
+    return render_template("account.html", cart=cart_list, user_data=user_data, address=address)
 
 
 @app.route("/search", methods=["GET", "POST"])

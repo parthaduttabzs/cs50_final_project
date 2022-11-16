@@ -31,15 +31,35 @@
     </div>
 
     <div>
+        <div class="container gx-0 mb- mt-3" id="address_list">
+            <div class="col">
+                <h6>Select an address for delivery:</h6>
+                <!-- <h6>Select Address: {{ address }}</h6> -->
+            </div>
+            <div class="row">
+                <ul class="list-group-flush">
+                    {% for i in address %}
+                    <li class="list-group-item">
+                      <input class="col-2 form-check-input me-1" required type="radio" name="listGroupRadio" id="firstRadio" onclick="select_address({{ i }})">
+                      <label class="col-10 form-check-label" id="address_tag" for="firstRadio"> {{ i['address'] }} </label>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="row mt-1 mb-3">
+                    <form action="/add_address" method="get">
+                        <input hidden name="source" value="cart">
+                        <input hidden name="address_selected" value="" id="address_select">
+                        <button class="btn btn-outline-primary" type="submit">Add new Address</button>
+                    </form>
+                </div>
+            </div>
+        </div>
         <!-- {{ cart }}<br><br>
         length: {{ cart|length }}         -->
         <div class="container gx-0 mb-3 mt-3" id="cart_top">
             <div class="row gx-0 justify-content-between align-items-center">
                 <div class="col-lg-4 col-7">
                     <h3>Your cart:</h3>
-                </div>
-                <div class="col-lg-4 col-5">
-                    Total cart value: <strong>Rs.<a id="total_amount"></strong></a>
                 </div>
             </div>
         </div>
@@ -76,37 +96,38 @@
     </div>
     
     
-    <div class="container gx-0 mb- mt-5" id="address_list">
-        <div class="col">
-            <h6>Select an address for delivery:</h6>
-            <!-- <h6>Select Address: {{ address }}</h6> -->
-        </div>
-        <div class="row">
-            <ul class="list-group-flush">
-                {% for i in address %}
-                <li class="list-group-item">
-                  <input class="col-2 form-check-input me-1" required type="radio" name="listGroupRadio" id="firstRadio" onclick="select_address({{ i }})">
-                  <label class="col-10 form-check-label" id="address_tag" for="firstRadio"> {{ i['address'] }} </label>
-                </li>
-                {% endfor %}
-                <div class="row mt-3">
-                    <form action="/add_address" method="get">
-                        <input hidden name="source" value="cart">
-                        <input hidden name="address_selected" value="" id="address_select">
-                        <button class="btn btn-outline-primary" type="submit">Add new Address</button>
+        <!-- <div class="cta_bar col-lg-12 col-12 bg-light mt-3" >
+            <div class="row justify-content-end">
+                <div class="col-lg-4 col-4 py-1">
+                    Total cart value: <strong>Rs.<a id="total_amount"></strong></a>
+                </div>
+                <div class="col-lg-4 col-8 py-1 align-items-center">
+                    <form action="/summary" method="post">
+                        <input hidden name="address_selected" value="" id="address_selected">
+                        <button id="proceed_button" class="btn btn-primary" type="submit">
+                            Proceed
+                        </button>
                     </form>
                 </div>
+            </div>
+        </div> -->
+        <div class="float_container" id="cart_bar" style="display:block">
+            <div id="go_to_cart" class="container" style="background-color:#54B435">
+                <div class="navbar justify-content-around">
+                    <div class="nav-items" style="color:#ffffff">
+                        Total cart value: <strong>Rs.<a id= "total_amount"></strong></a>
+                    </div>
+                    <div class="nav-items">
+                        <form action="/summary" method="post">
+                            <input hidden name="address_selected" value="" id="address_selected">
+                            <button id="proceed_button" class="btn btn-light" type="submit">Proceed</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-12 col-12 mt-3 d-grid justify-content-center" >
-            <form action="/summary" method="post">
-                <input hidden name="address_selected" value="" id="address_selected">
-                <button id="proceed_button" class="btn btn-primary" type="submit">
-                    Proceed
-                </button>
-            </form>
-        </div>
-        <div class="container" style="height:100px">
-        </div>
+        
+        <div class="container" style="height:140px"></div>
     </div>
     <script>
         let total_amount = 0;

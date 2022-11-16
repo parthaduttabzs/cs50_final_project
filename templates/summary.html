@@ -109,7 +109,7 @@
             <!-- </div> -->
         </div>
     </div>
-    <div class="col-lg-12 col-12 mt-3 mb-5 d-grid justify-content-center" id="add_fund">
+    <!-- <div class="col-lg-12 col-12 mt-3 mb-5 d-grid justify-content-center" id="add_fund">
         <form action="/orders" method="post">
             <input hidden name="address_selected" value='{{ address }}'>
             <input hidden name="order_amount" id="order_amount" value=''>
@@ -117,8 +117,24 @@
                 Confirm Order
             </button></a>
         </form>
+    </div> -->
+    <div class="float_container" id="cart_bar" style="display:block">
+        <div id="go_to_cart" class="container" style="background-color:#54B435">
+            <div class="navbar justify-content-center">
+                <div class="nav-items">
+                    <form action="/orders" method="post">
+                        <input hidden name="address_selected" value='{{ address }}'>
+                        <input hidden name="order_amount" id="order_amount" value=''>
+                        <button id="confirm_order" class=" btn btn btn-body" style="color:#ffffff;">
+                            Confirm Order
+                        </button></a>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="container" style="height:100px"></div>
+
+    <div class="container" style="height:140px"></div>
 
     <!-- <div>
         <p>text</p>
