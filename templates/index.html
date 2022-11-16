@@ -206,7 +206,7 @@
             product_sorted.forEach((i) => {
                 const card = document.createElement('div');
                 card.classList = 'card-body';
-                
+                i.discount = parseInt((i.discount)*10000)/100;
                 const content = `
                     <div class='product_block col-lg-4 col-12' style="border-radius:0.6rem;" id="card${i.product_id}">
                         <div class="row mb-3 shadow gx-3 bg-body" >
@@ -218,7 +218,7 @@
                                     <h6 id="product_name">${i.product_name}</h6>
                                     <small id="category">${i.category}</small><br>
                                     <small id="desc">${i.desc}</small>
-                                    <h6 id="price">Rs. ${i.price}&nbsp<span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;">&nbsp ${i.discount*100}% off &nbsp</span></h6>
+                                    <h6 id="price">Rs. ${i.price}&nbsp<span style="font-size:.75rem; background-color: #E0144C; color: #ffffff;">&nbsp ${i.discount}% off &nbsp</span></h6>
                                 </div>
                                 <div class="row">
                                     <form action="/add_to_cart" method="post">
