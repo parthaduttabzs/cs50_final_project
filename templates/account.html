@@ -61,13 +61,43 @@
                 <h6>My Addresses:</h6>
             </div>
         </div>
+        <div class="row" id="address_list" style="display: block;">
+            <div class="col-lg-12 col-12">
+                <ul class="list-group-flush">
+                    {% for i in address %}
+                        <li class="list-group-item">{{ i['address'] }}</li>
+                    {% endfor %}
+                </ul>    
+            </div>
+        </div>
+        <div class="row mb-5" id="address_radiolist" style="display: none;">
+            <div class="col-lg-12 col-12">
+                {% for i in range(address|length) %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="address_{{i}}">
+                    <label class="form-check-label" for="address_{{i}}">
+                        {{ address[i]['address'] }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
         <div class="row">
-            <ul class="list-group-flush">
-            {% for i in address %}
-                <li class="list-group-item">{{ i['address'] }}</li>
-            {% endfor %}
-            </ul>
+            <div class="col-lg-2 col-6" id="add_address">
                 <a class="nav-link" href="/add_address">Add new Address</a>
+            </div>
+            <div class="col-lg-2 col-6" id="delete_address">
+                <a class="nav-link"><span style="color:crimson; cursor:pointer"> Delete Address </span></a>
+            </div>
+            <div class="col-lg-2 col-6" id="confirm_delete" style="display: none">
+                <form action="/delete_address" id="delete_address_form" method="post">
+                    <input hidden id="addressToDelete" name="address" value="">
+                    <button class="btn btn-danger" onclick="delete_address()" id="confirm_delete_button" disabled>Confirm Delete</button>
+                </form>
+            </div>
+            <div class="col-lg-2 col-4" id="cancel" style="display: none">
+                <button class="btn btn-primary">Cancel</button>
+            </div>
         </div>
     </div>
     <div class="container mb-3 mt-3">
@@ -88,6 +118,46 @@
         </div>
     </div>
 <script>
-        
-    </script>
+    document.getElementById('delete_address').addEventListener('click', function(){
+        document.getElementById("add_address").style.display='none';
+        document.getElementById("address_list").style.display='none';
+        document.getElementById("address_radiolist").style.display='block';
+        document.getElementById("delete_address").style.display='none';
+        document.getElementById("confirm_delete").style.display='block';
+        document.getElementById("cancel").style.display='block';
+    })
+    document.getElementById('cancel').addEventListener('click', function(){
+        document.getElementById("add_address").style.display='block';
+        document.getElementById("address_list").style.display='block';
+        document.getElementById("address_radiolist").style.display='none';
+        document.getElementById("delete_address").style.display='block';
+        document.getElementById("confirm_delete").style.display='none';
+        document.getElementById("cancel").style.display='none';
+    })
+    var address = {{ address|tojson }}
+    var len = address.length
+    console.log(address)
+    console.log("#"+address[0]['address']+":checked")
+
+    document.getElementById('address_radiolist').addEventListener('click', function(){
+        console.log("click")
+        for (let n = 0; n < len; n++) {
+            if (document.querySelector("input#address_"+n+":checked")){
+                console.log('reached')
+                document.getElementById("confirm_delete_button").disabled = false;
+            };
+        };
+    });
+    function delete_address(){        
+        for (let n = 0; n < len; n++) {
+            if (document.querySelector("input#address_"+n+":checked")){
+                console.log('delete')
+                addressToDelete = address[n]['address']
+                console.log(address)
+                document.getElementById("addressToDelete").value = addressToDelete;
+                document.getElementById("delete_address_form").submit();        
+            };
+        };
+    };
+</script>
 {% endblock %}

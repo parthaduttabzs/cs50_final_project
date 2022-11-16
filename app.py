@@ -378,6 +378,25 @@ def add_address():
     return render_template("address.html", user_data=user_data, address=address)
 
 
+@app.route("/delete_address", methods=["GET", "POST"])
+@login_required
+def delete_address():
+    user_id = session["user_id"]
+    address = db.execute("SELECT address FROM address WHERE user_id= ?", user_id)
+    address = address[0]['address']
+    address_json = json.loads( address )
+    if request.method == "POST":
+        address = request.form.get("address")
+        for i in address_json:
+            if i['address'] == address:
+                address_json.remove(i)
+                db.execute("UPDATE address SET address = ?;", json.dumps(address_json))
+                flash(f"Address has been deleted")
+                return redirect("/account")
+    else:
+        return redirect("/account")
+
+
 @app.route("/orders", methods=["GET", "POST"])
 @login_required
 def confirm_orders():
