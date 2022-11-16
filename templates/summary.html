@@ -94,11 +94,16 @@
             <div class="container">
                 <div class="col-lg-12 col-12 mt-3 d-grid justify-content-center">
                     <!-- <span style="color:red">Fund insufficient!</span> -->
-                    <a href="/add_fund">
+                    <form action="/add_fund" method="get">
+                        <input hidden name="source" value="summary">
+                        <input hidden id="balance" name="balance" value="">
+                        <button class="btn btn-outline-primary" type="submit" id="add_fund" style="display: none;">Add Funds</button>
+                    </form>
+                    <!-- <a href="/add_fund">
                         <button class="btn btn-primary" id="add_fund" style="display: none;">
                             Add Fund
                         </button>
-                    </a>
+                    </a> -->
                 </div>
             </div>
             <!-- </div> -->
@@ -113,6 +118,8 @@
             </button></a>
         </form>
     </div>
+    <div class="container" style="height:100px"></div>
+
     <!-- <div>
         <p>text</p>
         <p>text</p>
@@ -127,6 +134,9 @@
         document.getElementById("total_amount").innerHTML = total_amount;
         document.getElementById("order_amount").value = total_amount;
         cash_available = parseInt({{ user_data[0]["cash"] }});
+        let balance = total_amount - cash_available;
+        console.log(balance)
+        document.getElementById('balance').value = balance;
         // console.log(cash_available);
         if (cash_available < total_amount) {
             document.getElementById("confirm_order").disabled = true;

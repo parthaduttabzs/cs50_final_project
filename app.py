@@ -255,7 +255,8 @@ def add_fund():
         flash(f"Rs. {amount}/- has been added to your account")
         return redirect("/")
     # if user is visiting the add fund page
-    return render_template("add_fund.html", user_data=user_data)
+    balance = request.args.get("balance")
+    return render_template("add_fund.html", user_data=user_data, balance=balance)
 
 
 @app.route("/cart", methods=["GET", "POST"])
@@ -369,7 +370,7 @@ def add_address():
     address = address[0]['address']
     address = json.loads( address )
     if request.method == "POST":
-        source = request.form.get("source")
+        source = request.forms.get("source")
         new = {}
         new['address'] = request.form.get("address")
         address.append(new)

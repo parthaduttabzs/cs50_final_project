@@ -16,11 +16,17 @@
     {{ cart|length }}
 {% endblock %}
 
+
+
 {% block main %}
+
+{{address_selected}}
 <div class="container-fluid col-8 py-5 text-center">    
     <form action="/add_fund" method="post">
         <div class="mb-3">
-            <input type = "number" name="amount" class="form-control mx-auto w-auto mb-3"required autocomplete="off" placeholder="Amount to add">
+            <input hidden id="source" name="source" value={{source}}>
+            <input hidden id="address_selected" name="address_selected" value={{address_selected}}>
+            <input type = "number" name="amount" class="form-control mx-auto w-auto mb-3"required autocomplete="off" value={{balance}}>
             <button class="btn btn-primary" type="submit">Add Fund</button>
         </div>
     </form>

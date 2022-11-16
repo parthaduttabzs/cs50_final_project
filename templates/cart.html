@@ -92,21 +92,21 @@
                 <div class="row mt-3">
                     <form action="/add_address" method="get">
                         <input hidden name="source" value="cart">
+                        <input hidden name="address_selected" value="" id="address_select">
                         <button class="btn btn-outline-primary" type="submit">Add new Address</button>
                     </form>
                 </div>
         </div>
-        <div class="col-lg-12 col-12 mt-3 mb-5 d-grid justify-content-center" >
+        <div class="col-lg-12 col-12 mt-3 d-grid justify-content-center" >
             <form action="/summary" method="post">
-                <input hidden name="address_selected" value="" id="address-selected">
+                <input hidden name="address_selected" value="" id="address_selected">
                 <button id="proceed_button" class="btn btn-primary" type="submit">
                     Proceed
                 </button>
             </form>
-            
-            <!-- <p>{{ address }}</p> -->
         </div>
-        <!-- {{ cart|length }} -->
+        <div class="container" style="height:100px">
+        </div>
     </div>
     <script>
         let total_amount = 0;
@@ -117,10 +117,9 @@
         document.getElementById("total_amount").innerHTML = total_amount;
         
         function select_address(address) {
-            // console.log(address);
             address = address['address'];
-            // console.log(address);
-            document.getElementById("address-selected").value = address;
+            document.getElementById("address_selected").value = address;
+            document.getElementById("address_select").value = address;
             };
         if ({{ cart|length }} === 0) {
             console.log({{ cart|length }})
