@@ -13,7 +13,7 @@ User stories:
 - User can also search for any product 
 - User can decide qty for each items and add them to cart 
 - User can go to cart and select an address from the address book
-- If no address book is empty, user can enter an address for delivery in the address book
+- If address book is empty, user can enter an address for delivery in the address book
 - Once address has been added, user can review the cart. User can also delete items from the cart
 - User can now go to summary and review the order details, address and payment
 - User can add enough funds to the account to place the order
