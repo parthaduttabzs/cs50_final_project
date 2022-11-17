@@ -13,11 +13,12 @@
 {% endblock %}
 
 {% block main %}
-<!-- {{source}} -->
-<div class="container-fluid col-8 py-5 text-center">    
+{{source}}
+<div class="container-fluid col-8 text-center">    
     <form action="/add_address" method="post">
         <div class="mb-3">
             <input hidden id="source" name="source" value={{source}}>
+            <input hidden id="address_selected" name="address_selected" value={{address_selected}}>
             <input type = "text" name="address" class="form-control mx-auto w-auto mb-3"required autocomplete="off" placeholder="Add new address">
             <button class="btn btn-primary" type="submit">Add Address</button>
         </div>

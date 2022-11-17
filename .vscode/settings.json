@@ -5,6 +5,7 @@
         "Iconify",
         "pycache",
         "Roadmap",
-        "Templating"
+        "Templating",
+        "tojson"
     ]
 }
