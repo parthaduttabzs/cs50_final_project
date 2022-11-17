@@ -416,6 +416,9 @@ def confirm_orders():
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     order_details = db.execute("SELECT * FROM orders WHERE user_id = ?", user_id)
     if request.method == "POST":
+        if len(cart_list) == 0:
+            flash(f"Please check if order already placed")
+            return redirect("/orders")
         cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", user_id)
         if cart:
             cart = cart[0]['cart_items']
@@ -435,7 +438,7 @@ def confirm_orders():
         date_time = datetime.datetime.now()
         order_items = json.dumps(cart)
         # add order details to order table
-        db.execute("INSERT INTO orders (user_id, datetime, order_items, order_amount, address, order_status) VALUES(?,?,?,?,?,?)",user_id, date_time, order_items, order_amount, address, 'SUCCESS')
+        db.execute("INSERT INTO orders (user_id, datetime, order_items, order_amount, address, order_status) VALUES(?,?,?,?,?,?)",user_id, date_time, order_items, order_amount, address, 'Pending')
         # empty current cart
         db.execute("UPDATE carts SET cart_items = ?;", '[]')
         # Log transaction
