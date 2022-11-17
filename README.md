@@ -12,12 +12,13 @@ User stories:
 - User can use sort and filter function to find products easily 
 - User can also search for any product 
 - User can decide qty for each items and add them to cart 
-Once done adding items to cart, user can go to cart and enter an address for delivery (user to be able to select the same address for future orders) 
-- Once address has been added, user can review the cart. User can also delete items from the cart. 
-- User can now go to summary and review the order details, address and payment. 
-- User can add enough fund to the account to place the order. 
-- After placing the orer user can view the placed order details and status of the order in the order section
--Once Client has shipped the order, user should be able to see updated order status against the order
+- User can go to cart and select an address from the address book
+- If no address book is empty, user can enter an address for delivery in the address book
+- Once address has been added, user can review the cart. User can also delete items from the cart
+- User can now go to summary and review the order details, address and payment
+- User can add enough funds to the account to place the order
+- After placing the order user can view the placed order details and status of the order in the order section
+- Once Client has shipped the order, user should be able to see updated order status against the order
 - User can also go to account to see his/her personal details
 - User should be able to view added addresses, add/delete addresses
 - User should be able to see all transactions (i.e. Add fund, Order Placing)
