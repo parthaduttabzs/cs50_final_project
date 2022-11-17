@@ -379,6 +379,8 @@ def add_address():
         source = request.form.get("source")
         new = {}
         new['address'] = request.form.get("address")
+        if len(new['address']) == 0:
+            return error("Address entered is invalid")
         address.append(new)
         db.execute("UPDATE address SET address = ? WHERE user_id = ?;", json.dumps(address), user_id)
         flash(f"New address has been added")
@@ -495,6 +497,8 @@ def search():
     if request.method=="POST":
         if request.form.get("search"):
             keyword = request.form.get("search").lower()
+            if len(keyword) == 0:
+                return error("Search input is invalid")
             keyword = '%'+keyword+'%'
             word = keyword.replace('%','')
             product_data = db.execute(f"SELECT * FROM products WHERE lower(product_name) LIKE '{keyword}';")
