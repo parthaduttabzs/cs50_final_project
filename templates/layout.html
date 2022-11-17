@@ -23,7 +23,7 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="/" style="font-family: Helvetica; color:#54B435"><strong>Grocery Deli</strong></a>
+            <a class="navbar-brand" href="/" style="font-family: Helvetica; color:#54B435"><strong>Grocery Deli&nbsp</strong><iconify-icon icon="game-icons:fruit-bowl" style="color: #54b435;"></iconify-icon></a>
             
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 {% if session["user_id"] %}
@@ -85,7 +85,7 @@
                             <iconify-icon icon="ic:baseline-home" style="color: #54B435;"></iconify-icon>
                         </a>
                     </div>
-                    <div class="row justify-content-center">Home</div>
+                    <div class="row justify-content-center" style="color:darkgrey">Home</div>
                 </div>
             </div>
             <div class="col-3">
@@ -93,7 +93,7 @@
                     <div class="row justify-content-center">
                         <a href="/cart"><iconify-icon icon="material-symbols:shopping-cart-outline-rounded" style="color: #54B435;"></iconify-icon></a>
                     </div>
-                    <div class="row justify-content-center">Cart[{{cart|length}}]</div>
+                    <div class="row justify-content-center" style="color:darkgrey">Cart[{{cart|length}}]</div>
                 </div>
             </div>
             <div class="col-3">
@@ -101,7 +101,7 @@
                     <div class="row justify-content-center">
                         <a href="/orders"><iconify-icon icon="icon-park-outline:transaction-order" style="color: #54B435;"></iconify-icon></a>
                     </div>
-                    <div class="row justify-content-center">Orders</div>
+                    <div class="row justify-content-center" style="color:darkgrey">Orders</div>
                 </div>            
             </div>
             <div class="col-3">
@@ -109,7 +109,7 @@
                     <div class="row justify-content-center">
                         <a href="/account"><iconify-icon icon="material-symbols:account-circle" style="color: #54B435;"></iconify-icon></a>
                     </div>
-                    <div class="row justify-content-center">Account</div>
+                    <div class="row justify-content-center" style="color:darkgrey">Account</div>
                 </div>
             </div>
         </nav>
