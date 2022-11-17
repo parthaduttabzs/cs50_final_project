@@ -117,7 +117,7 @@ def password_strength(password):
     if (length < 6 or lower < 1 or upper < 1 or digit < 1 or special < 1):
         # if password is not strong enough
         return False
-        # password matches the validation criteri and hence strong
+        # password matches the validation criteria and hence strong
     else:
         return True
 
@@ -155,22 +155,28 @@ def register():
     if request.method == "POST":
         # check for valid inputs
         if not request.form.get("email") or not request.form.get("phone") or not request.form.get("name"):
-            return error("must provide all valid details", 400)
+            flash("must provide all valid details")
+            return redirect("/register")            
         # ensure no duplicate email ID
         elif len(db.execute("SELECT user_id FROM users WHERE email = ?", request.form.get("email"))) == 1:
-            return (error("Email ID already exists", 400))
+            flash("Email ID already exists")
+            return redirect("/register")            
         # ensure no duplicate mobile number
         elif len(db.execute("SELECT user_id FROM users WHERE phone = ?", request.form.get("phone"))) == 1:
-            return (error("Mobile number already exists", 400))
+            flash("Mobile number already exists")
+            return redirect("/register")
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return error("must provide password", 400)
+            flash("must provide password")
+            return redirect("/register")
         # ensure password matches
         elif request.form.get("password") != request.form.get("confirmation"):
-            return error("password didn't match")
+            flash("password didn't match")
+            return redirect("/register")
         # ensure password is strong (disabled to pass cs50 check50 and submit50)
-        # elif not password_strength(request.form.get("password")):
-        #     return error("password needs to be atleast 6 character, with min 1 upper, 1 lower, 1 digit and 1 special ('@', '#', '_') character", 400)
+        elif not password_strength(request.form.get("password")):
+            flash("password needs to be at least 6 character, with min 1 upper, 1 lower, 1 digit and 1 special ('@', '#', '_') character")
+            return redirect("/register")
         # accept username and password and proceed to register
         hash = generate_password_hash(request.form.get("password"))
         db.execute("INSERT INTO users (name, email, phone, hash) VALUES (?, ?, ?, ?)", request.form.get("name"), request.form.get("email"), request.form.get("phone"), hash)
@@ -200,18 +206,21 @@ def login():
 
         # Ensure email was submitted
         if not request.form.get("email"):
-            return error("must provide email", 403)
+            flash("must provide email")
+            return redirect("/login")
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return error("must provide password", 403)
+            flash("must provide password")
+            return redirect("/login")
 
         # Query database for email ID
         rows = db.execute("SELECT * FROM users WHERE email = ?", request.form.get("email"))
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return error("invalid Email ID or password", 403)
+            flash("invalid Email ID or password")
+            return redirect("/login")
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["user_id"]

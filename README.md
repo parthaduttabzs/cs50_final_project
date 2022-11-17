@@ -69,7 +69,7 @@ The customer app is designed to be mobile first. The app is responsive enough to
 - JINJA2: Templating HTMLs with data
 - CSS and Bootstrap: Adding design elements. [Iconify](https://iconify.design/) have been used for icons
 #### **Future Development Roadmap**
-- Adding more features to the customer app (i.e. Category pages, better search capability )
+- Adding more features to the customer app (i.e. Category pages, better search capability, Payment gateway, Notification system)
 - Adding more features in the client app (i.e. Inventory management, P&L Dashboard, Add/ Remove Products, notifications)
 - Adding delivery side app for updating status of shipment delivery
 - Adding more CSS/ Bootstrap elements to make interactions more engaging

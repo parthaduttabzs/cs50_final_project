@@ -21,14 +21,50 @@
 {% block main %}
 
 {{address_selected}}
-<div class="container-fluid col-8 py-5 text-center">    
-    <form action="/add_fund" method="post">
-        <div class="mb-3">
-            <input hidden id="source" name="source" value={{source}}>
-            <input hidden id="address_selected" name="address_selected" value={{address_selected}}>
-            <input type = "number" name="amount" class="form-control mx-auto w-auto mb-3"required autocomplete="off" value={{balance}}>
-            <button class="btn btn-primary" type="submit">Add Fund</button>
+<div class="container py-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-12 mb-3">
+            <input class="form-control mx-auto w-auto mb-3"required autocomplete="off" id ="fund" value={{balance}}>
+            <div class="row row-col-3">
+                <div class="col mb-2">
+                    <button id="count1" class="btn btn-outline-primary">+ 1,000</button>
+                </div>
+                <div class="col mb-2">
+                    <button id="count2" class="btn btn-outline-primary">+ 5,000</button>                    
+                </div>
+                <div class="col mb-2">
+                    <button id="count3" class="btn btn-outline-primary">+ 10,000</button>                        
+                </div>
+            </div>
+            <form action="/add_fund" method="post">
+                <input hidden type = "number" name="amount" id="fund_to_add">
+                <input hidden id="source" name="source" value={{source}}>
+                <input hidden id="address_selected" name="address_selected" value={{address_selected}}>
+                <button class="btn btn-primary mt-3" onclick="add_fund()">Add Fund</button>
+            </form>
         </div>
-    </form>
+    
+    </div>
 </div>
+<script>
+    document.getElementById("count1").addEventListener("click", function(){
+        fund = parseInt(document.getElementById("fund").value);
+        fund += 1000;
+        document.getElementById("fund").value = fund;
+        document.getElementById("fund_to_add").value = fund;
+    });
+    document.getElementById("count2").addEventListener("click", function(){
+        fund = parseInt(document.getElementById("fund").value);
+        fund += 5000;
+        document.getElementById("fund").value = fund;
+        document.getElementById("fund_to_add").value = fund;
+    });
+    document.getElementById("count3").addEventListener("click", function(){
+        fund = parseInt(document.getElementById("fund").value);
+        fund += 10000;
+        document.getElementById("fund").value = fund;
+        document.getElementById("fund_to_add").value = fund;
+    });
+</script>
+
 {% endblock %}
