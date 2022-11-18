@@ -1,5 +1,5 @@
 # Grocery Deli
-#### Video Demo:  <URL HERE>
+#### Video Demo:  <URL https://www.youtube.com/watch?v=HZX1rmvlooE>
 #### Description: 
 Grocery Deli is an e-commerce web and mobile app, that enables any grocery business to let customers place orders and client to fulfill the orders.
 

@@ -44,8 +44,11 @@ def index():
 
 @app.route("/client_order_details", methods=["GET", "POST"])
 def client_order_details():
+    # get order_id
     order_id = request.form.get("order_id")
+    # get order data
     order_details = db.execute("SELECT * FROM orders WHERE order_id = ?", order_id)
+    # get user data
     user_id = order_details[0]["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?", user_id)
     order_items = order_details[0]["order_items"]
