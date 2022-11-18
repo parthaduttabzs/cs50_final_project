@@ -29,10 +29,10 @@
                 {% if session["user_id"] %}
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="/orders">My Orders</a>
+                            <a class="nav-link" href="/account">{% block user %}{% endblock %}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/account">{% block user %}{% endblock %}</a>
+                            <a class="nav-link" href="/orders">My Orders</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="/add_fund">{% block fund %}{% endblock %}</a>
@@ -40,7 +40,7 @@
                         <li class="nav-item">
                             <a class="nav-link py-0 gy-0" aria-current="page" href="/cart">
                                 <iconify-icon icon="material-symbols:shopping-cart-outline-rounded" style="color: #54B435;"width="30" height="30"></iconify-icon>
-                                <span class="py-0 gy-0" style="vertical-align: top;">[{% block cart %}{% endblock %}]</span>
+                                <span class="py-0 gy-0"style="vertical-align:top;text-decoration: none; font-size:.75rem; background-color: #54B435 ; color: #ffffff;">&nbsp{{cart|length}}&nbsp</span>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -94,8 +94,8 @@
                         <div class="col-3">
                             <a href="/cart"><iconify-icon icon="material-symbols:shopping-cart-outline-rounded" style="color: #54B435;" "width="26" height="26"></iconify-icon></a>
                         </div>
-                        <div class="col-3">
-                            <a href="/cart"><span style="text-decoration: none; color:#54B435">[{{cart|length}}]</span></a>
+                        <div class="col-3 px-3">
+                            <a href="/cart"><span style="vertical-align:top; text-decoration: none; font-size:.75rem; background-color: #54B435 ; color: #ffffff;">&nbsp{{cart|length}}&nbsp</span></a>
                         </div>    
                     </div>
                 <!-- </div> -->

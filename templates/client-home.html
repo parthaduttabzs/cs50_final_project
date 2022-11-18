@@ -32,10 +32,9 @@
                 <th>ORDER ID</th>
                 <th>USER ID</th>
                 <th>DATETIME</th>
-                <th>ORDER ITEMS</th>
-                <th>ORDER AMOUNT</th>
-                <th>ADDRESS</th>
-                <th>ORDER STATUS</th>
+                <th>ITEMS</th>
+                <th>AMOUNT</th>
+                <th>STATUS</th>
             </tr>
         </thead>
         <tbody>
@@ -51,12 +50,20 @@
                     </form>
                 </td>
                 <td>{{ i["order_amount"] }}</td>
-                <td>{{ i["address"] }}</td>
-                <td>{{ i["order_status"] }}</td>
+                <td class="status">{{ i["order_status"] }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-    
+<script>
+    const nodeList = document.querySelectorAll('.status');
+    for (let i =0; i < nodeList.length; i++) {
+        if (nodeList[i].innerHTML == "Pending") {
+            nodeList[i].style.backgroundColor = '#FFE15D';
+        } else {
+            nodeList[i].style.backgroundColor = '#B3FFAE';
+        };
+    };
+</script>
 </body>

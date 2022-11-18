@@ -60,7 +60,7 @@ To run the client side app: (In new terminal)
 - User shouldn't be able to see other user's data
 
 #### **Design considerations**
-The customer app is designed to be mobile first. The app is responsive enough to accommodate Computer/Laptop view as well. The color pallet uses `#54B435` as the primary color.
+The customer app is designed to be mobile first. The app is responsive enough to accommodate Computer/Laptop view as well. The color pallet uses `#54B435` and `#198754` as the primary color.
 
 #### **Languages used**
 - Python: Flask app creation, routing, calculations
@@ -77,4 +77,4 @@ The customer app is designed to be mobile first. The app is responsive enough to
 - Hosting the apps on external servers
 #### _disclaimers:_
 - The product images and names have been taken from a existing ecommerce app called "BBDaily" in India
-- The product prices are randomly generated
+- The product prices and discounts are randomly generated

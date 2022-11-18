@@ -46,9 +46,11 @@ def index():
 def client_order_details():
     order_id = request.form.get("order_id")
     order_details = db.execute("SELECT * FROM orders WHERE order_id = ?", order_id)
+    user_id = order_details[0]["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE user_id = ?", user_id)
     order_items = order_details[0]["order_items"]
     order_items = json.loads(order_items)
-    return render_template("client_order_details.html", order_items=order_items, order_details=order_details)        
+    return render_template("client_order_details.html", order_items=order_items, order_details=order_details, user_data=user_data)        
 
 
 @app.route("/status_change", methods=["GET", "POST"])

@@ -40,55 +40,67 @@
                         <h6>ORDER STATUS: {{ i["order_status"] }}</h6>
                         <form action="status_change" method="post">
                             <input hidden name="order_id" value={{i['order_id']}}>
-                            <button class="btn btn-success" type="submit" >Confirm Shipment</button>
+                            <button class="btn btn-success mt-2" type="submit" >Confirm Shipment</button>
                         </form>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-        <div class="container gx-0 mb-3 mt-3">
-            <div class="row gx-0 justify-content-between align-items-center">
-                <div class="col-lg-4 col-6">
-                    <h3>Order summary:</h3>
-                </div>
-                <!-- <div class="col-lg-4 col-6 d-grid justify-content-around">
-                    <a href="/payment"><button id="confirm_order" class="btn btn-primary">
-                        Confirm Order
-                    </button></a>
-                </div> -->
-            </div>
-        </div>
-        <!-- <h3>{{ cart }}</h3> -->
+        <div class="text-success">
+            <hr>
+        </div>    
         <div class="container">
-            <div class="row">
-                <h5>Cart Items: </h5>
-            </div>
-        </div>
-        {% for i in order_items %}
-            <div class="container shadow bg-body mt-3 mb-3" style="border-radius:0.6rem">
-                <div class="row gx-0 py-3 mb-3 align-items-center">
-                    <div class="col-lg-4 col-4">
-                        <image alt="image" src={{ i["image"] }}></image>
+            {% for i in user_data %}
+            <div class="row gx-0 py-3 mb-3 align-items-center">
+                <div class="col-lg-12 col-12">
+                    <div class="row">
+                        Customer name: {{i['name']}}
                     </div>
-                    <div class="col-lg-8 col-8 gx-4">
-                        <div class="row" >
-                            <h6 id="product_name">{{ i["product_name"] }}</h6>
-                        </div>
-                        <div class="row">
-                            <small>Qty: {{ i["qty"] }}</small>
-                        </div>
-                        <div class="row">
-                            <small>Price: {{ i["price"] }}</small>
-                        </div>
-                        <div class="row">
-                            <strong id="{{ i['product_id']}}+_amount">Amount: {{ i["amount"] }}</strong>
-                        </div>
+                    <div class="row">
+                        Customer email ID: {{i['email']}}
                     </div>
-                </div>                
+                    <div class="row">
+                        Customer email ID: {{i['phone']}}
+                    </div>
+                </div>
             </div>
         {% endfor %}
-    
+        </div>
+        <div class="text-success">
+            <hr>
+        </div>    
+        <div class="container">
+            <div class="row">
+                <h6>Order Items: </h6>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    {% for i in order_items %}
+                        <div class="container shadow bg-body mt-3 mb-3" style="border-radius:0.6rem">
+                            <div class="row gx-0 py-3 mb-3 align-items-center">
+                                <div class="col-lg-4 col-4">
+                                    <image alt="image" src={{ i["image"] }} style="height:100px;"></image>
+                                </div>
+                                <div class="col-lg-8 col-8 gx-4">
+                                    <div class="row" >
+                                        <h6 id="product_name">{{ i["product_name"] }}</h6>
+                                    </div>
+                                    <div class="row">
+                                        <small>Qty: {{ i["qty"] }}</small>
+                                    </div>
+                                    <div class="row">
+                                        <small>Price: {{ i["price"] }}</small>
+                                    </div>
+                                    <div class="row">
+                                        <strong id="{{ i['product_id']}}+_amount">Amount: {{ i["amount"] }}</strong>
+                                    </div>
+                                </div>
+                            </div>                
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
-
 </body>

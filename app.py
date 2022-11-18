@@ -121,6 +121,12 @@ def password_strength(password):
     else:
         return True
 
+# IMPORTANT!
+# For columns 'cart_items' in table carts and 'address' in table address, the details are captured in the format of a list of dictionaries
+# This has been done to simplify the tables (carts and address). So that there are only one row in each of these tables for each users
+# Whenever the cart_items or addresses needed modification or exported to JINJA, json.loads has been used to convert strings into into json objects
+# Whenever modified cart_items/ addresses needed to be updated in the tables in db, json.dumps has been used to convert json object into strings
+
 
 @app.route("/", methods=["GET", "POST"])
 @login_required
@@ -128,8 +134,10 @@ def index():
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     product_data = db.execute("SELECT * FROM products;")
+    # load cart details for footer bar, cart_bar and header cart data
     cart = db.execute("SELECT * FROM carts WHERE user_id = ?;", user_id)
     cart_list = cart[0]['cart_items']
+    # convert string array to JSON object to modify key-value pairs and use in JINJA template
     cart_list = json.loads(cart_list)
     return render_template("index.html", user_data = user_data, product_data=product_data, cart=cart_list)
 
@@ -186,7 +194,9 @@ def register():
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["user_id"]
+        # create an empty cart for the user
         db.execute("INSERT INTO carts (user_id, cart_items) VALUES (?,?);", session["user_id"],'[]')
+        # create an empty address-book for the user
         db.execute("INSERT INTO address (user_id, address, primary_address) VALUES (?,?,?);", session["user_id"],'[]', 0)
         flash("You have successfully registered!")
         return redirect("/")
@@ -252,6 +262,7 @@ def add_fund():
     user_id = session["user_id"]
     cart = db.execute("SELECT * FROM carts WHERE user_id = ?;", user_id)
     cart_list = cart[0]['cart_items']
+    # convert string array to JSON object to modify key-value pairs and use in JINJA template
     cart_list = json.loads(cart_list)
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     # if user has placed a add fund request
@@ -305,23 +316,34 @@ def add_to_cart():
     user_id = session["user_id"]
     cart = db.execute("SELECT * FROM carts WHERE user_id = ?;", user_id)
     if request.method == "POST":
+        # get user inputs
         product_id = request.form.get("product_id")
         qty = int(request.form.get("qty"))
+        # validation for invalid qty
         if qty <= 0:
-            return error("Please enter valid inputs", 400)
+            flash("Quantity cannot zero")
+            return redirect("/")
+        # load existing cart
         cart_list = cart[0]['cart_items']
+        # convert string array to JSON object to modify key-value pairs and use in JINJA template
         cart_json = json.loads( cart_list )
         for i in cart_json:
+            # check if user is quantity of products that are already existing in the cart
             if i['product_id'] == product_id:
+                # if yes, then update the qty of the product
                 i['qty'] = int(i['qty']) + (qty)
+                # update the carts table with updated qty for the same product. Use JSON dump to convert JSON object to string for db update
                 db.execute("UPDATE carts SET cart_items = ? WHERE user_id = ?;", json.dumps(cart_json), user_id)
                 flash(f"Cart has been updated")
                 return redirect("/")
+        # if new product is being added to cart
         new = {}
         new['product_id'] = product_id
         new['qty'] = qty
         new['price'] = db.execute("SELECT price FROM products WHERE product_id = ?", product_id)[0]['price']
+        # add new product to the cart
         cart_json.append(new)
+        # update carts table with new cart
         db.execute("UPDATE carts SET cart_items = ? WHERE user_id = ?;", json.dumps(cart_json), user_id)
         flash(f"Cart has been updated")
         return redirect("/")
@@ -333,11 +355,14 @@ def remove_from_cart():
     user_id = session["user_id"]
     cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", user_id)
     cart_list = cart[0]['cart_items']
+    # convert string array to JSON object to modify key-value pairs and use in JINJA template
     cart_json = json.loads( cart_list )
     if request.method == "POST":
         product_id = request.form.get("product_id")
         for i in cart_json:
+            # find out which product is being removed
             if i['product_id'] == product_id:
+                # remove the product
                 cart_json.remove(i)
                 db.execute("UPDATE carts SET cart_items = ?;", json.dumps(cart_json))
                 flash(f"Item has been removed from cart")
@@ -352,22 +377,27 @@ def summary():
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     address = request.form.get('address_selected')
+    # check if no address was selected
     if len(address) == 0:
         flash("Please select an address for delivery")
         return redirect("/cart")
     cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", user_id)
+    # check if cart is empty but routed through /summary
     if len(cart) == 0:
-        flash("Please select an address for delivery")
+        flash("Cart is empty")
         return redirect("/cart")
     else:
         cart_list = cart[0]['cart_items']
+        # convert string array to JSON object to modify key-value pairs and use in JINJA template
         cart_list = json.loads(cart_list)
         for i in cart_list:
+            # get additional details for the products in the cart
             prod = db.execute("SELECT * FROM products WHERE product_id = ?;", i["product_id"])
             i["product_name"] = prod[0]["product_name"]
             i["price"] = prod[0]["price"]
             i["image"] = prod[0]["image"]
             i["desc"] = prod[0]["desc"]
+            # calculate amount for each cart items
             i["amount"] = int(prod[0]["price"]) * int(i["qty"])
     return render_template("summary.html", cart=cart_list, user_data=user_data, address=address)
 
@@ -378,22 +408,29 @@ def add_address():
     # get user data
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
+    # get cart data
     cart = db.execute("SELECT * FROM carts WHERE user_id = ?;", user_id)
     cart_list = cart[0]['cart_items']
     cart_list = json.loads(cart_list)
+    # get address data
     address = db.execute("SELECT address FROM address WHERE user_id= ?", user_id)
     address = address[0]['address']
+    # convert string array to JSON object to modify key-value pairs and use in JINJA template
     address = json.loads( address )
     if request.method == "POST":
+        # get where user is coming from POST method
         source = request.form.get("source")
         new = {}
         new['address'] = request.form.get("address")
+        # check if empty address was submitted
         if len(new['address']) == 0:
             return error("Address entered is invalid")
+        # add new address to the address string
         address.append(new)
         db.execute("UPDATE address SET address = ? WHERE user_id = ?;", json.dumps(address), user_id)
         flash(f"New address has been added")
         return redirect(f"/{source}")
+    # get where user is coming from GET method
     source = request.args.get("source")
     return render_template("address.html", cart=cart_list, user_data=user_data, address=address, source=source)
 
@@ -404,8 +441,10 @@ def delete_address():
     user_id = session["user_id"]
     address = db.execute("SELECT address FROM address WHERE user_id= ?", user_id)
     address = address[0]['address']
+    # convert string array to JSON object to modify key-value pairs and use in JINJA template
     address_json = json.loads( address )
     if request.method == "POST":
+        # get user input
         address = request.form.get("address")
         for i in address_json:
             if i['address'] == address:
@@ -423,6 +462,7 @@ def confirm_orders():
     user_id = session["user_id"]
     cart = db.execute("SELECT * FROM carts WHERE user_id = ?;", user_id)
     cart_list = cart[0]['cart_items']
+    # convert string array to JSON object to modify key-value pairs and use in JINJA template
     cart_list = json.loads(cart_list)
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     order_details = db.execute("SELECT * FROM orders WHERE user_id = ?", user_id)
@@ -431,10 +471,12 @@ def confirm_orders():
             flash(f"Please check if order already placed")
             return redirect("/orders")
         cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", user_id)
+        # check if there is any cart for the user_id
         if cart:
             cart = cart[0]['cart_items']
         else:
             cart = '[]'
+        # convert string array to JSON object to modify key-value pairs and use in JINJA template
         cart = json.loads( cart )
         address = request.form.get('address_selected')
         order_amount = request.form.get("order_amount")
@@ -447,6 +489,7 @@ def confirm_orders():
             i["amount"] = int(prod[0]["price"]) * int(i["qty"])
                 
         date_time = datetime.datetime.now()
+        # convert JSON object to string array to modify key-value pairs and use in JINJA template
         order_items = json.dumps(cart)
         # add order details to order table
         db.execute("INSERT INTO orders (user_id, datetime, order_items, order_amount, address, order_status) VALUES(?,?,?,?,?,?)",user_id, date_time, order_items, order_amount, address, 'Pending')
@@ -471,6 +514,7 @@ def view_orders():
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     order_details = db.execute("SELECT * FROM orders WHERE order_id = ?", request.form.get('order_id'))
     order_items = order_details[0]['order_items']
+    # convert string array to JSON object to modify key-value pairs and use in JINJA template
     order_items = json.loads( order_items )
     return render_template("order_details.html", user_data=user_data, order_details=order_details, order_items=order_items)
 
@@ -496,26 +540,29 @@ def search():
     user_id = session["user_id"]
     user_data = db.execute("SELECT * FROM users WHERE user_id = ?;", user_id)
     cart = db.execute("SELECT cart_items FROM carts WHERE user_id = ?;", user_id)
+    # check if cart exists for the user_id
     if cart:
         cart = cart[0]['cart_items']
     else:
         cart = '[]'
     cart = json.loads( cart )
-    sort_by = ''
-    sort_direction = [{'reverse':False}]
     if request.method=="POST":
         if request.form.get("search"):
+            # convert search term to lowercase
             keyword = request.form.get("search").lower()
+            # check if search term is empty
             if len(keyword) == 0:
                 return error("Search input is invalid")
+            # modify search term with sql wildcards to enable broader search
             keyword = '%'+keyword+'%'
+            product_data = db.execute(f"SELECT * FROM products WHERE lower(product_name) LIKE '{keyword}' OR lower(category) LIKE '{keyword}' OR lower(desc) LIKE '{keyword}';")
+            # cleanup keyword for user to read in the search page
             word = keyword.replace('%','')
-            product_data = db.execute(f"SELECT * FROM products WHERE lower(product_name) LIKE '{keyword}';")
             flash(f"Showing search results for: {word}")
         else:
             return error("Please enter valid search input")            
     
-        return render_template("search_result.html", user_data = user_data, product_data=product_data, cart=cart, sort_by=sort_by, sort_direction=sort_direction)
+        return render_template("search_result.html", user_data = user_data, product_data=product_data, cart=cart)
     return redirect("/")
 
 @app.route("/change_password", methods=["GET", "POST"])
@@ -529,9 +576,11 @@ def change_password():
         user_id = session["user_id"]
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
+        # check if password entered matches with confirmation entry
         if password == confirmation:
-            # if not password_strength(password):
-            #     return error("password needs to be atleast 6 character, with min 1 upper, 1 lower, 1 digit and 1 special ('@', '#', '_') character", 403)
+            # check if password is strong
+            if not password_strength(password):
+                return error("password needs to be atleast 6 character, with min 1 upper, 1 lower, 1 digit and 1 special ('@', '#', '_') character", 403)
             hash = generate_password_hash(request.form.get("password"))
             db.execute(f"UPDATE users SET hash = ? WHERE user_id = ?", hash, user_id)
             flash("Your password has been changed successfully")
@@ -545,7 +594,7 @@ def change_password():
 
 @app.route("/transactions")
 @login_required
-def transctions():
+def transactions():
     """Show history of transactions"""
     # get user data
     user_id = session["user_id"]
