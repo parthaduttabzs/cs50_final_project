@@ -120,7 +120,7 @@ input::-webkit-inner-spin-button {
   }
   .float_container {
     position:fixed;
-    bottom:70px;
+    bottom:56px;
     right: 0px;
     left:0px;
     cursor:pointer;

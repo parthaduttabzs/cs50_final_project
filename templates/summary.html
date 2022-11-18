@@ -24,104 +24,90 @@
                 <div class="col-lg-4 col-6">
                     <h3>Order summary:</h3>
                 </div>
-                <!-- <div class="col-lg-4 col-6 d-grid justify-content-around">
-                    <a href="/payment"><button id="confirm_order" class="btn btn-primary">
-                        Confirm Order
-                    </button></a>
-                </div> -->
             </div>
         </div>
-        <!-- <h3>{{ cart }}</h3> -->
         <div class="container">
             <div class="row">
                 <h5>Cart Items: </h5>
             </div>
-        </div>
-        {% for i in cart %}
-            <div class="container shadow bg-body mt-3 mb-3" style="border-radius:0.6rem">
-                <div class="row gx-0 py-3 mb-3 align-items-center">
-                    <div class="col-lg-4 col-4">
-                        <image alt="image" src={{ i["image"] }}></image>
-                    </div>
-                    <div class="col-lg-8 col-8 gx-4">
-                        <div class="row" >
-                            <h6 id="product_name">{{ i["product_name"] }}</h6>
-                        </div>
-                        <div class="row">
-                            <small>Qty: {{ i["qty"] }}</small>
-                        </div>
-                        <div class="row">
-                            <small>Price: {{ i["price"] }}</small>
-                        </div>
-                        <div class="row">
-                            <strong id="{{ i['product_id']}}+_amount">Amount: {{ i["amount"] }}</strong>
-                        </div>
-                    </div>
-                </div>                
-            </div>
-        {% endfor %}
-        <div class="container mt-5">
             <div class="row">
-                <h5>To be delivered at: </h5>
-            </div>
-            <div class="row bg-light">
-                <div class="col-lg-6 col-10">
-                    {{ address }}
+                <div class="col-lg-8">
+                    {% for i in cart %}
+                    <div class="container shadow bg-body mt-3 mb-3" style="border-radius:0.6rem">
+                        <div class="row gx-0 py-3 mb-3 align-items-center">
+                            <div class="col-lg-4 col-4">
+                                <image alt="image" src={{ i["image"] }} style="height:100px;"></image>
+                            </div>
+                            <div class="col-lg-8 col-8 gx-4">
+                                <div class="row" >
+                                    <h6 id="product_name">{{ i["product_name"] }}</h6>
+                                </div>
+                                <div class="row">
+                                    <small>Qty: {{ i["qty"] }}</small>
+                                </div>
+                                <div class="row">
+                                    <small>Price: {{ i["price"] }}</small>
+                                </div>
+                                <div class="row">
+                                    <strong id="{{ i['product_id']}}+_amount">Rs. {{ i["amount"] }}</strong>
+                                </div>
+                            </div>
+                        </div>                
+                    </div>
+                {% endfor %}
                 </div>
+                <!-- <div class="col d-flex" style="height: 300px;">
+                    <div class="vr"></div>
+                </div> -->
+                <div class="col-lg-4">
+                    <div class="container">
+                        <div class="row">
+                            <h5>To be delivered at: </h5>
+                        </div>
+                        <div class="row bg-light">
+                            <div class="col-lg-6 col-10">
+                                {{ address }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container mt-5">
+                        <div class="row">
+                            <h5>Payment summary: </h5>
+                        </div>
+                        <div class="row bg-light" id="fund_warning">
+                            <div class="col-lg-6 col-8">
+                                Total fund available:
+                            </div>
+                            <div class="col-lg-6 col-4 justify-content-around">
+                                <strong>Rs. {{ user_data[0]["cash"] }}</strong>
+                            </div>
+                        </div>
+                        <div class="row bg-light">
+                            <div class="col-lg-6 col-8">
+                                Total cart value:
+                            </div>
+                            <div class="col-lg-6 col-4">
+                                <strong>Rs. <a id="total_amount"></strong>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="col-lg-12 col-12 mt-3 d-grid justify-content-center">
+                                <form action="/add_fund" method="get">
+                                    <input hidden name="source" value="summary">
+                                    <input hidden id="balance" name="balance" value="">
+                                    <button class="btn btn-outline-primary" type="submit" id="add_fund" style="display: none;">Add Funds</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>    
+                </div>    
             </div>
-        </div>
-        <div class="container mt-5">
-            <div class="row">
-                <h5>Payment summary: </h5>
-            </div>
-            <div class="row bg-light" id="fund_warning">
-                <div class="col-lg-6 col-6">
-                    Total fund available:
-                </div>
-                <div class="col-lg-6 col-6 justify-content-around">
-                    <strong>Rs. {{ user_data[0]["cash"] }}</strong>
-                </div>
-            </div>
-            <div class="row bg-light">
-                <div class="col-lg-6 col-6">
-                    Total cart value:
-                </div>
-                <div class="col-lg-6 col-6">
-                    <strong>Rs. <a id="total_amount"></strong>
-                </div>
-            </div>
-            <!-- <div class="row"> -->
-            <div class="container">
-                <div class="col-lg-12 col-12 mt-3 d-grid justify-content-center">
-                    <!-- <span style="color:red">Fund insufficient!</span> -->
-                    <form action="/add_fund" method="get">
-                        <input hidden name="source" value="summary">
-                        <input hidden id="balance" name="balance" value="">
-                        <button class="btn btn-outline-primary" type="submit" id="add_fund" style="display: none;">Add Funds</button>
-                    </form>
-                    <!-- <a href="/add_fund">
-                        <button class="btn btn-primary" id="add_fund" style="display: none;">
-                            Add Fund
-                        </button>
-                    </a> -->
-                </div>
-            </div>
-            <!-- </div> -->
         </div>
     </div>
-    <!-- <div class="col-lg-12 col-12 mt-3 mb-5 d-grid justify-content-center" id="add_fund">
-        <form action="/orders" method="post">
-            <input hidden name="address_selected" value='{{ address }}'>
-            <input hidden name="order_amount" id="order_amount" value=''>
-            <button id="confirm_order" class=" float btn btn-primary">
-                Confirm Order
-            </button></a>
-        </form>
-    </div> -->
     <div class="float_container" id="cart_bar" style="display:block">
-        <div id="go_to_cart" class="container" style="background-color:#54B435">
-            <div class="navbar justify-content-center">
-                <div class="nav-items">
+        <div id="go_to_cart" class="container" style="background-color:#198754">
+            <div class="row py-2 justify-content-center">
+                <div class="col-lg-4 col-6" style="text-align: center;">
                     <form action="/orders" method="post">
                         <input hidden name="address_selected" value='{{ address }}'>
                         <input hidden name="order_amount" id="order_amount" value=''>

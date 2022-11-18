@@ -47,23 +47,26 @@
     </div>
 </div>
 <script>
+    if (document.getElementById("fund").value == 'None') {
+        document.getElementById("fund").value = 0;
+    };
     document.getElementById("count1").addEventListener("click", function(){
         fund = parseInt(document.getElementById("fund").value);
         fund += 1000;
-        document.getElementById("fund").value = fund;
-        document.getElementById("fund_to_add").value = fund;
+            document.getElementById("fund").value = fund;
+            document.getElementById("fund_to_add").value = fund;
     });
     document.getElementById("count2").addEventListener("click", function(){
         fund = parseInt(document.getElementById("fund").value);
         fund += 5000;
-        document.getElementById("fund").value = fund;
-        document.getElementById("fund_to_add").value = fund;
+            document.getElementById("fund").value = fund;
+            document.getElementById("fund_to_add").value = fund;
     });
     document.getElementById("count3").addEventListener("click", function(){
         fund = parseInt(document.getElementById("fund").value);
         fund += 10000;
-        document.getElementById("fund").value = fund;
-        document.getElementById("fund_to_add").value = fund;
+            document.getElementById("fund").value = fund;
+            document.getElementById("fund_to_add").value = fund;
     });
 </script>
 

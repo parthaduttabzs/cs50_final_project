@@ -124,14 +124,14 @@
 
 <div class="float_container" id="cart_bar" style="display:none">
     <div id="go_to_cart" class="container" style="background-color:#54B435">
-        <div class="navbar">
-            <div class="nav-items" id = "cart_qty" style="color:#ffffff">
+        <div class="row py-2 gy-2 justify-content-end">
+            <div class="col-lg-4 col-4" id = "cart_qty" style="color:#ffffff">
 
             </div>
-            <div class="nav-items" id = "cart_amount" style="color:#ffffff">
+            <div class="col-lg-4 col-4" id = "cart_amount" style="color:#ffffff">
                 
             </div>
-            <div class="nav-items">
+            <div class="col-lg-4 col-4" style="text-align: center;">
                 <form action="/cart" method="get">
                     <button class="btn btn-light" type="submit">Go to Cart</button>
                 </form>
@@ -166,8 +166,8 @@
                 amount = i.qty * i.price;
                 cart_amount += amount;
             });
-            document.getElementById('cart_qty').innerHTML = 'Items added\:<br>' + cart_qty;
-            document.getElementById('cart_amount').innerHTML = 'Cart amount\:<br>' + 'Rs. '+cart_amount;
+            document.getElementById('cart_qty').innerHTML = cart_qty +' items';
+            document.getElementById('cart_amount').innerHTML = 'Rs. '+cart_amount;
             if (cart_qty > 0) {
                 document.getElementById('cart_bar').style.display = 'block';
             };

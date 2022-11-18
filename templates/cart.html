@@ -31,103 +31,101 @@
     </div>
 
     <div>
-        <div class="container gx-0 mb- mt-3" id="address_list">
-            <div class="col">
-                <h6>Select an address for delivery:</h6>
-                <!-- <h6>Select Address: {{ address }}</h6> -->
-            </div>
-            <div class="row">
-                <ul class="list-group-flush">
-                    {% for i in address %}
-                    <li class="list-group-item">
-                      <input class="col-2 form-check-input me-1" required type="radio" name="listGroupRadio" id="firstRadio" onclick="select_address({{ i }})">
-                      <label class="col-10 form-check-label" id="address_tag" for="firstRadio"> {{ i['address'] }} </label>
-                    </li>
-                    {% endfor %}
-                </ul>
-                <div class="row mt-1 mb-3">
-                    <form action="/add_address" method="get">
-                        <input hidden name="source" value="cart">
-                        <input hidden name="address_selected" value="" id="address_select">
-                        <button class="btn btn-link" type="submit">Add new Address</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!-- {{ cart }}<br><br>
-        length: {{ cart|length }}         -->
         <div class="container gx-0 mb-3 mt-3" id="cart_top">
             <div class="row gx-0 justify-content-between align-items-center">
-                <div class="col-lg-4 col-7">
+                <div class="col-lg-4 col-6">
                     <h3>Your cart:</h3>
                 </div>
             </div>
-        </div>
-        <!-- <h3>{{ cart }}</h3> -->
-        {% for i in cart %}
-            <div class="container shadow bg-body mt-3 mb-3" style="border-radius:0.6rem">
-                <div class="row gx-0 py-3 mb-3 align-items-center">
-                    <div class="col-lg-2 col-4">
-                        <image alt="image" src={{ i["image"] }}></image>
+        </div>  
+        <div class="container">
+            <div class="row">
+                <h5>Cart Items: </h5>
+            </div>    
+            <div class="row">
+                <div class="col-lg-8">
+                    {% for i in cart %}
+                    <div class="container shadow bg-body mt-3 mb-3" style="border-radius:0.6rem">
+                        <div class="row gx-0 py-3 mb-3 align-items-center">
+                            <div class="col-lg-2 col-4">
+                                <image alt="image" src={{ i["image"] }} style="height:100px;"></image>
+                            </div>
+                            <div class="col-lg-8 col-5 px-2">
+                                <div class="row">
+                                    <h6>{{ i["product_name"] }}</h6>
+                                </div>
+                                <div class="row">
+                                    <small>Qty: {{ i["qty"] }}</small>
+                                </div>
+                                <div class="row">
+                                    <small>Price: Rs. {{ i["price"] }}</small>
+                                </div>
+                                <div class="row">
+                                    <strong id="{{ i['product_id']}}+_amount">Rs. {{ i["amount"] }}</strong>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-3 d-grid justify-content-around">
+                                <form action="/remove_from_cart" method="post">
+                                    <input hidden id={{ i["product_id"] }} name="product_id" value={{ i["product_id"] }}>
+                                    <button class="btn btn-outline-danger btn-sm">Remove</button>
+                                </form>
+                            </div> 
+                        </div>                
                     </div>
-                    <div class="col-lg-8 col-5 px-2">
-                        <div class="row">
-                            <h6>{{ i["product_name"] }}</h6>
-                        </div>
-                        <div class="row">
-                            <small>Qty: {{ i["qty"] }}</small>
-                        </div>
-                        <div class="row">
-                            <small>Price: Rs. {{ i["price"] }}</small>
-                        </div>
-                        <div class="row">
-                            <strong id="{{ i['product_id']}}+_amount">Amount: Rs. {{ i["amount"] }}</strong>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-3 d-grid justify-content-around">
-                        <form action="/remove_from_cart" method="post">
-                            <input hidden id={{ i["product_id"] }} name="product_id" value={{ i["product_id"] }}>
-                            <button class="btn btn-outline-danger btn-sm">Remove</button>
-                        </form>
-                    </div> 
-                </div>                
-            </div>
-        {% endfor %}
-    </div>
-    
-    
-        <!-- <div class="cta_bar col-lg-12 col-12 bg-light mt-3" >
-            <div class="row justify-content-end">
-                <div class="col-lg-4 col-4 py-1">
-                    Total cart value: <strong>Rs.<a id="total_amount"></strong></a>
+                {% endfor %}    
                 </div>
-                <div class="col-lg-4 col-8 py-1 align-items-center">
+                <!-- <div class="col-1 d-flex" style="height: 200px;">
+                    <div class="vr"></div>
+                </div> -->
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="container gx-0 mb- mt-3" id="address_list">
+                            <div class="col">
+                                <h6>Select an address for delivery:</h6>
+                            </div>
+                            <div class="row">
+                                <ul class="list-group-flush">
+                                    {% for i in address %}
+                                    <li class="list-group-item">
+                                      <input class="col-2 form-check-input me-1" required type="radio" name="listGroupRadio" id="firstRadio" onclick="select_address({{ i }})">
+                                      <label class="col-10 form-check-label" id="address_tag" for="firstRadio"> {{ i['address'] }} </label>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                <div class="row mt-1 mb-3">
+                                    <form action="/add_address" method="get">
+                                        <input hidden name="source" value="cart">
+                                        <input hidden name="address_selected" value="" id="address_select">
+                                        <button class="btn btn-link" type="submit">Add new Address</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>            
+                    </div>
+                    <div class="text-success">
+                        <hr>
+                    </div>                
+                    <div class="col-lg-4 col-4" style="color:#000000">
+                        Total cart value: <strong>Rs.<a id= "total_amount"></strong></a>
+                    </div>        
+            </div>
+            </div>        
+        </div>
+    </div>
+    <div class="float_container" id="cart_bar" style="display:block">
+        <div id="go_to_cart" class="container" style="background-color:#54B435">
+            <div class="row py-2 justify-content-center">
+                <div class="col-lg-4 col-4" style="text-align: center;">
                     <form action="/summary" method="post">
                         <input hidden name="address_selected" value="" id="address_selected">
-                        <button id="proceed_button" class="btn btn-primary" type="submit">
-                            Proceed
-                        </button>
+                        <button id="proceed_button" class="btn btn-body" style="color:#ffffff;" type="submit">Proceed</button>
                     </form>
                 </div>
             </div>
-        </div> -->
-        <div class="float_container" id="cart_bar" style="display:block">
-            <div id="go_to_cart" class="container" style="background-color:#54B435">
-                <div class="navbar justify-content-around">
-                    <div class="nav-items" style="color:#ffffff">
-                        Total cart value: <strong>Rs.<a id= "total_amount"></strong></a>
-                    </div>
-                    <div class="nav-items">
-                        <form action="/summary" method="post">
-                            <input hidden name="address_selected" value="" id="address_selected">
-                            <button id="proceed_button" class="btn btn-light" type="submit">Proceed</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
         </div>
+    </div>
         
-        <div class="container" style="height:140px"></div>
+    <div class="container" style="height:140px"></div>
     </div>
     <script>
         let total_amount = 0;
