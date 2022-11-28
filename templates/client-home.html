@@ -26,6 +26,24 @@
         </header>
     {% endif %}
 <div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-12 mt-3">
+            <div class="row mb-3">
+                <h5>Dashboard</h5>
+            </div>
+            <div class="row mb-3" id = "total_order">
+                Total orders received:
+            </div>
+            <div class="row mb-3" id = "shipped">
+                Total orders shipped:
+            </div>
+            <div class="row mb-5" id = "pending">
+                Total orders pending:
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -57,13 +75,23 @@
     </table>
 </div>
 <script>
+    var pending = 0;
+    var shipped = 0;
+    var total_order = pending + shipped;
     const nodeList = document.querySelectorAll('.status');
     for (let i =0; i < nodeList.length; i++) {
         if (nodeList[i].innerHTML == "Pending") {
+            pending += 1;
             nodeList[i].style.backgroundColor = '#FFE15D';
         } else {
+            shipped += 1;
             nodeList[i].style.backgroundColor = '#B3FFAE';
         };
     };
+    total_order = shipped + pending;
+    document.getElementById("total_order").innerHTML = "Total Order received: "+total_order;
+    document.getElementById("shipped").innerHTML = "Total Order shipped: "+shipped;
+    document.getElementById("pending").innerHTML = "Total Order pending: "+pending;
+
 </script>
 </body>
