@@ -43,7 +43,7 @@ User stories:
 #### **Running the apps:**
 To run the customer side app:
 ```
-run flask
+flask run
 ```
 To run the client side app: (In new terminal)
 ```
