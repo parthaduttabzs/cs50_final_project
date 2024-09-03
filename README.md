@@ -47,7 +47,7 @@ flask run
 ```
 To run the client side app: (In new terminal)
 ```
---app client run --host 0.0.0.0 --port 5001
+python -m flask --app client run --host 0.0.0.0 --port 5001
 ```
 
 #### **Validations implemented** (Frontend + Backend)
